@@ -33,26 +33,18 @@ The frontend should allow for user interaction - button clicks, input, forms, up
 
 
 
+## To-Do
 
-## API App (Continuation of Midterm App)
+Your To-Do application should allow Users to create a project, and within the project create To-Do’s
 
-Your application should allow Users to perform a search using your selected API from the midterm.  Your App must follow the guidelines below.
+Your UI must allow Users to do the following:
 
-### Guidelines
-Your server should use the custom module built for the midterm.  Create a frontend (UI) that must allow Users to do the following:
+- See a list of all projects
+- Navigate into a project and view all To-Do’s associated with the project.
+- Add a new To Do
+- Toggle an existing To Do between done and not done.
+- Remove all completed To Do’s.
 
-- Indicate to the User the type of search that is available, so the User knows what to type into the input field.
-    - For example if you have a Music API - indicate the search will work on song titles
-- Have an input field the User types into.
-- When the search results are return, present the user with a list of results.
-    - ONLY display a result set that is 10 or fewer
-- When the User selects the result, show the Details of the selected result.
-- The details should be formatted cleanly. So that it is easily readable.
-    - DO NOT display JSON structures.
-- The details should include an image and if no image is present uses a default image.
-- Allow the user to have the option to search again.
-
-
-### Extra Credit - Synchronization (10pts)
-- Whenever a search is performed add it to a list of previous searches. The UI should be display the previous searches in real-time.  This list should be clickable and take the User to a search results page.
+### Extra Credit- Synchronization (10 pts)
+- Whenever a project or To Do is created, modified, or deleted, the UI should be updated in real-time.
 - To receive credit - you must accomplish this with WebSockets.
