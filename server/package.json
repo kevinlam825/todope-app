@@ -1,0 +1,24 @@
+{
+  "name": "cs4220-final",
+  "version": "1.0.0",
+  "description": "this sickest project by the sickest developers for the sickest class",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kevinlam825/CS4220-Final.git"
+  },
+  "author": "Bryan Bravo, Kevin San, Patty Flinner, Gevorg Catchatriangle",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kevinlam825/CS4220-Final/issues"
+  },
+  "homepage": "https://github.com/kevinlam825/CS4220-Final#readme",
+  "dependencies": {
+    "express": "^4.16.3",
+    "nodemon": "^1.17.3",
+    "socket.io": "^2.1.0"
+  }
+}
