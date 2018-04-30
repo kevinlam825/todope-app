@@ -5,6 +5,7 @@ const app = new Vue({
     data: {
         projects:[],
         currentProject:{},
+        currentToDo: {},
         showProject:false,
         newToDoDesc:'',
         newProjectName:''
@@ -22,16 +23,24 @@ const app = new Vue({
             app.showProject = true;
         },
         removeCompletedToDos: function () {
-            console.log(app.currentProject.id)
-            //send the id of the project 
+            if (!this.currentProject)
+                return
+
+            socket.emit('remove-completed-todos', this.currentProject.id)
         },
         addToDo: function () {
-            console.log(app.newToDoDesc)
-            //send project id and add the todo to the toDoList
+            if (!this.newToDoDesc)
+                return
+
+            socket.emit('add-todo', { projectID: this.currentProject.id, description: this.newToDoDesc })
         },
         completeToDo: function() {
             //need to figure out why the checkbox wont show in the table
-            //send the todo id and set the todo.complete field to true
+
+            if(!this.currentProject)
+                return
+        
+            socket.emit('complete-todo', { projectID: this.currentProject.id, todoID: this.currentToDo.id})
         }
     },
     components: {
@@ -43,6 +52,10 @@ const app = new Vue({
 socket.on('send-projects', projects => {
     app.projects = projects
     console.log(projects)
+});
+
+socket.on('send-current-project', currentProject => {
+    app.currentProject = currentProject
 });
 
 //socket.on... when the server sends to the client
