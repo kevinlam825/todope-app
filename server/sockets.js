@@ -56,6 +56,7 @@ module.exports = (server) => {
                             todo.completed = true
                     })
                 }
+                io.emit('send-current-project', project)
             })
         });
         socket.on('disconnect', () => {
