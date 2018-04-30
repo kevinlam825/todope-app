@@ -2,9 +2,10 @@ class Project {
     //private id:number;
     //private name: string;
     //private toDoList: Todo[];
-    constructor(id, name, toDoList) {
+    constructor(id, name, description, toDoList) {
         this.id = id;
         this.name = name;
+        this.description = description;
         this.toDoList = toDoList;
         this.toDoCounter = 0;
     }
