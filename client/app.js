@@ -36,7 +36,7 @@ const app = new Vue({
                 return
 
             console.log("app.js: addToDo: app.currentProject: ", app.currentProject)
-            socket.emit('add-todo', { projectID: app.currentProject.id, app: this.newToDoDesc, completed: false })
+            socket.emit('add-todo', { projectID: app.currentProject.id, name: this.newToDoDesc, completed: false })
         },
         deleteToDo: function (){
             console.log("delete")
