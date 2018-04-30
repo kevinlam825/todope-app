@@ -40,8 +40,8 @@
                     <table>
                         <thead><td>Task</td><td>Completed</td></thead>
                         <tr v-for='todo in currentProject.toDoList'>
+                            <td><input type="checkbox" v-model='checked'></td>
                             <td>{{todo.description}}</td>
-                            <td><input type="checkbox" ></td>
                         </tr>
                     </table>   
                     <input type="text" v-model="newToDoDesc" placeholder='New Task'>
