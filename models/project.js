@@ -6,6 +6,7 @@ class Project {
         this.id = id;
         this.name = name;
         this.toDoList = toDoList;
+        this.toDoCounter = 0;
     }
     // METHODS
     // add to todo to list

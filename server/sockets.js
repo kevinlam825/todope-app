@@ -24,13 +24,39 @@ module.exports = (server) => {
             socket.emit('send-projects',projects);
         });
         socket.on('remove-completed-todos', data => {
-            //remove the completed todos of a project
+            projects.forEach(project => {
+                if(project.id == data){
+                    project.toDoList.forEach(todo =>{
+                        if(todo.completed == true){
+                            const index = project.toDoList.indexOf(todo);
+                            project.toDoList.splice(index, 1);
+                        }
+                    })
+                    io.emit('send-current-project', project)
+                }
+            })
         });
         socket.on('add-todo', data => {
-            // add a new todo to a specified project
+           //Create new ToDo
+           projects.forEach(project =>{    //Iterate through all projects
+            if(project.id == data.projectID) {
+                project.toDoCounter++
+                const newToDo = new ToDo(project.toDoCounter, data.description, false) 
+                project.toDoList.push(newToDo)  //Add new todo to corresponding project
+                io.emit('send-current-project', project)    //Refresh UI
+            }
+        })
         });
         socket.on('complete-todo', data => {
             // find the todo from its project and change it to completed
+            projects.forEach(project =>{
+                if(project.id == data.projectID){
+                    project.toDoList.forEach(todo =>{
+                        if(todo.id == data.todoID)
+                            todo.completed = true
+                    })
+                }
+            })
         });
         socket.on('disconnect', () => {
         })
