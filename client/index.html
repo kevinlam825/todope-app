@@ -32,7 +32,7 @@
                 <ul>
                     <li v-for='project in projects'> <button v-on:click='selectProject(project.id)'>{{project.name}}</button></li>
                 </ul>
-                <input type="text" v-model="newProjectName" placeholder='New Project'>
+                <input v-on:keydown.enter="addProject()" type="text" v-model="newProjectName" placeholder='New Project'>
             </div>
             <!-- To Dos column-->
             <div class="col s9" v-show='showProject'>

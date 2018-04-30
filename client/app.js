@@ -11,7 +11,8 @@ const app = new Vue({
     },
     methods: {
         addProject: function () {
-            console.log(app.newProjectName)
+            console.log('addddd')
+            socket.emit('add-project',app.newProjectName)
             // send project and add it to the list || db
         },
         selectProject: function (id) {
@@ -41,6 +42,7 @@ const app = new Vue({
 // when user first opens up browser to obtain their projects.
 socket.on('send-projects', projects => {
     app.projects = projects
+    console.log(projects)
 });
 
 //socket.on... when the server sends to the client

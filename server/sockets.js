@@ -4,10 +4,11 @@ const ToDo = require('../models/todo.js');
 module.exports = (server) => {
     const io = require('socket.io')(server);
     // const projects = [];
+    let counter =0
     const projects = [
-        new Project(0,'berlin wall',[ new ToDo(0,'divide germany into 4 parts',false)]),
-        new Project(1, 'robot waifus', [new ToDo(0,'robot titties',false)]),
-        new Project(2, 'laser beam sharks', [new ToDo(0,'find sharks',false)]),
+        new Project(counter++,'berlin wall',[ new ToDo(0,'divide germany into 4 parts',false)]),
+        new Project(counter++, 'robot waifus', [new ToDo(0,'robot titties',false)]),
+        new Project(counter++, 'laser beam sharks', [new ToDo(0,'find sharks',false)]),
     ];
 
     // when the page is loaded in the browser the connection event is fired
@@ -16,8 +17,11 @@ module.exports = (server) => {
         // on making a connection send all the projects
         socket.emit('send-projects', projects);
 
-        socket.on('add-project', data => {
+        socket.on('add-project', projectname => {
             //add the project to the list
+            console.log("add project")
+            projects.push(new Project(counter++,projectname,[]))
+            socket.emit('send-projects',projects);
         });
         socket.on('remove-completed-todos', data => {
             //remove the completed todos of a project
