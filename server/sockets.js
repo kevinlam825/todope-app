@@ -91,7 +91,8 @@ module.exports = (server, db) => {
                     console.log("socket.js: findProject: FAIL")
                     return
                 }
-                const index = project.toDoList.findIndex(elem => elem.id == data.todoObj._id)
+                console.log("data.todoObj: ", data.todoObj)
+                const index = project.toDoList.findIndex(elem => elem._id == data.todoObj._id)
                 if (index == -1) {
                     console.log("set-todo invalid project")
                 } else {

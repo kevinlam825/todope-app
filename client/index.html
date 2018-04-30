@@ -40,7 +40,7 @@
                     <table>
                         <thead><td>Task</td><td>Completed</td></thead>
                         <tr v-for='todo in currentProject.toDoList'>
-                            <td><label><input type="checkbox" class="filled-in" v-model="todo.completed" v-on:click='completeToDo'><span>Name: {{ todo.name }}</span></label></td>
+                            <td><label><input type="checkbox" class="filled-in" v-model="todo.completed" v-on:click='completeToDo(todo._id)'><span>Name: {{ todo.name }}</span></label></td>
                             <td v-if="todo.completed">True</td>
                         </tr>
                     </table>   

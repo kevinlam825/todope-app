@@ -5,7 +5,6 @@ const app = new Vue({
     data: {
         projects:[],
         currentProject:{},
-        currentToDo: {},
         showProject:false,
         newToDoDesc:'',
         newProjectName:''
@@ -41,14 +40,16 @@ const app = new Vue({
         deleteToDo: function (){
             console.log("delete")
         },
-        completeToDo: function() {
+        completeToDo: function(id) {
             //need to figure out why the checkbox wont show in the table
 
-            if(!this.currentProject)
+            console.log("completeToDo: id: ", id)
+            if(!this.currentProject || id==null)
                 return
             console.log("CLICK CLICK")
-            this.currentToDo.completed = !this.currentToDo.completed
-            socket.emit('set-todo', { projectID: app.currentProject.id, todoObj: app.currentToDo})
+            const index = this.currentProject.toDoList.findIndex(elem => elem._id == id)
+            this.currentProject.toDoList[index].completed = !this.currentProject.toDoList[index].completed 
+            socket.emit('set-todo', { projectID: app.currentProject.id, todoObj: app.currentProject.toDoList[index]})
         }
     },
     components: {
