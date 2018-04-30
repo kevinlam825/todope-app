@@ -118,7 +118,9 @@ const addProject = (project) => {
 // }
 
 module.exports = {
-    addProject
+    addProject,
+    getAllProjects,
+    getAllTodos
     // activeUsers,
     // allMessages,
     // createUser,

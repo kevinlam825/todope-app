@@ -52,7 +52,7 @@ const app = new Vue({
 
 
 // when user first opens up browser to obtain their projects.
-socket.on('send-projects', projects => {
+socket.on('refresh-projects', projects => {
     app.projects = projects
     console.log(projects)
 });
