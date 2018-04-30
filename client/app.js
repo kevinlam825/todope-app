@@ -42,7 +42,7 @@ const app = new Vue({
 
             if(!this.currentProject)
                 return
-        
+            console.log("CLICK CLICK")
             socket.emit('complete-todo', { projectID: this.currentProject.id, todoID: this.currentToDo.id})
         }
     },
