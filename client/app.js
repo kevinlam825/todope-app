@@ -17,9 +17,12 @@ const app = new Vue({
             // send project and add it to the list || db
         },
         selectProject: function (id) {
+            console.log("app.js: selectProject(): call")
             app.currentProject = app.projects.find( project => {
                 return project.id === id;
             });
+            console.log("app.js: selectProject: app.currentProject: ", app.currentProject)
+            console.log("app.js: selectProject: id: ", id)
             app.showProject = true;
         },
         removeCompletedToDos: function () {
@@ -32,7 +35,8 @@ const app = new Vue({
             if (!this.newToDoDesc)
                 return
 
-            socket.emit('add-todo', { projectID: this.currentProject.id, description: this.newToDoDesc })
+            console.log("app.js: addToDo: app.currentProject: ", app.currentProject)
+            socket.emit('add-todo', { projectID: app.currentProject.id, app: this.newToDoDesc, completed: false })
         },
         deleteToDo: function (){
             console.log("delete")
@@ -43,7 +47,8 @@ const app = new Vue({
             if(!this.currentProject)
                 return
             console.log("CLICK CLICK")
-            socket.emit('complete-todo', { projectID: this.currentProject.id, todoID: this.currentToDo.id})
+            this.currentToDo.completed = !this.currentToDo.completed
+            socket.emit('set-todo', { projectID: app.currentProject.id, todoObj: app.currentToDo})
         }
     },
     components: {
@@ -54,6 +59,19 @@ const app = new Vue({
 // when user first opens up browser to obtain their projects.
 socket.on('refresh-projects', projects => {
     app.projects = projects
+
+    if(app.currentProject.name == null) return
+    console.log("app.js: refresh-projects (pre): app.currentProject:", app.currentProject)
+    const index = app.projects.findIndex(elem => elem._id == app.currentProject._id)
+    if(index==-1) {
+        console.log("Can't find current project in the current projectlist with index: " + index)
+    } else {
+        // app.currentProject = app.projects[index]
+        app.currentProject = app.projects.find(elem => elem._id == app.currentProject._id)
+        console.log("app.js: refresh-projects (post): app.currentProject:", app.currentProject)
+        console.log("app.js: refresh-projects (post): index:", index)
+    }
+    
     console.log(projects)
 });
 

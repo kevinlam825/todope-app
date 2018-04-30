@@ -29,7 +29,7 @@ const ProjectSchema = new Mongoose.Schema({
     id: Mongoose.Schema.Types.ObjectId,
     name: String,
     description: String,
-    todos: [ToDoSchema]
+    toDoList: [ToDoSchema]
 })
 
 const
@@ -47,10 +47,29 @@ const addProject = (project) => {
         id: new Mongoose.Types.ObjectId,
         name: project.name,
         description: project.description,
-        todos: project.todos
+        todos: project.toDoList
     }
     return Project.create(content)
 }
+
+const saveProject = (project) => {
+    return Project.findOneAndUpdate({'_id':project._id}, project, {upsert: true})
+}
+
+
+const addTodo = (todo) => {
+    const content = {
+        id: new Mongoose.Types.ObjectId,
+        name: todo.name, 
+        completed: todo.completed
+    }
+    return ToDo.create(content)
+}
+
+const findProject = id => {
+    return Project.findOne({ 'id': id })
+}
+
 
 // const createMessage = data => {
 //     const content = {
@@ -120,7 +139,10 @@ const addProject = (project) => {
 module.exports = {
     addProject,
     getAllProjects,
-    getAllTodos
+    getAllTodos,
+    addTodo,
+    findProject,
+    saveProject
     // activeUsers,
     // allMessages,
     // createUser,

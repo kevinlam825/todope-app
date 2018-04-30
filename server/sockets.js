@@ -3,7 +3,7 @@ const ToDo = require('../models/todo.js');
 const User = require('../models/user.js');
 
 
-module.exports = (server,db) => {
+module.exports = (server, db) => {
     const io = require('socket.io')(server);
     // const projects = [];
     let counter = 0
@@ -35,40 +35,88 @@ module.exports = (server,db) => {
             })
         });
         socket.on('remove-completed-todos', data => {
-            projects.forEach(project => {
-                if(project.id == data){
-                    project.toDoList.forEach(todo =>{
-                        if(todo.completed == true){
-                            const index = project.toDoList.indexOf(todo);
-                            project.toDoList.splice(index, 1);
-                        }
-                    })
-                    io.emit('send-current-project', project)
+            // projects.forEach(project => {
+            //     if(project.id == data){
+            //         project.toDoList.forEach(todo =>{
+            //             if(todo.completed == true){
+            //                 const index = project.toDoList.indexOf(todo);
+            //                 project.toDoList.splice(index, 1);
+            //             }
+            //         })
+            //         io.emit('send-current-project', project)
+            //     }
+            // })
+        });
+        socket.on('add-todo', todo => {
+            //Create new ToDo
+            console.log("add todo")
+            // db.addTodo(todo).then(project => {
+            //     db.getAllProjects().then(projects => {
+            //         socket.emit('refresh-projects', projects)
+            //         console.log(projects)
+            //     })
+            // })
+
+            // { projectID: this.currentProject._id, name: this.newToDoDesc, completed: false }
+
+            console.log("todo.projectID = "+ todo.projectID)
+            db.findProject(todo.projectID).then(project => {
+                if(project == null) {
+                    console.log("Something seriously went wrong")
+                    return
+                }
+                const index = project.toDoList.findIndex(elem => elem._id == todo.todoID)
+                if (index != -1) {
+                    console.log("Todo already exists! TODO: add failure emit here: " + index)
+                } else {
+                    project.toDoList.push(todo)
+                    db.saveProject(project)
+                        .then(_ => {
+                            db.getAllProjects().then(projects => {
+                                console.log("Adding todo, about to call refresh-projects")
+                                socket.emit('refresh-projects', projects)
+                                console.log(projects)
+                            })
+                        })
                 }
             })
+
+
+
         });
-        socket.on('add-todo', data => {
-           //Create new ToDo
-           projects.forEach(project =>{    //Iterate through all projects
-            if(project.id == data.projectID) {
-                project.toDoCounter++
-                const newToDo = new ToDo(project.toDoCounter, data.description, false) 
-                project.toDoList.push(newToDo)  //Add new todo to corresponding project
-                io.emit('send-current-project', project)    //Refresh UI
-            }
-        })
-        });
-        socket.on('complete-todo', data => {
-            // find the todo from its project and change it to completed
-            projects.forEach(project =>{
-                if(project.id == data.projectID){
-                    project.toDoList.forEach(todo =>{
-                        if(todo.id == data.todoID)
-                            todo.completed = true
-                    })
+        socket.on('set-todo', data => {
+            
+            db.findProject(data.projectID).then(project => {
+                if(project==null) {
+                    console.log("socket.js: findProject: FAIL")
+                    return
                 }
-                io.emit('send-current-project', project)
+                const index = project.toDoList.findIndex(elem => elem.id == data.todoObj._id)
+                if (index == -1) {
+                    console.log("set-todo invalid project")
+                } else {
+                    project.toDoList[index] = data.todoObj
+                    db.saveProject(project)
+                        .then(project => {
+                            db.getAllProjects().then(projects => {
+                                socket.emit('refresh-projects', projects)
+                                console.log(projects)
+                            })
+                        })
+                }
             })
+
+
+            // // find the todo from its project and change it to completed
+            // projects.forEach(project => {
+            //     if (project.id == data.projectID) {
+            //         project.toDoList.forEach(todo => {
+            //             if (todo.id == data.todoID)
+            //                 todo.completed = true
+            //         })
+            //     }
+            //     io.emit('send-current-project', project)
+            // })
         });
         socket.on('disconnect', () => {
         })
