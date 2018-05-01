@@ -25,6 +25,16 @@
 
 <body>
     <div id="to-do-app">
+
+        <!-- WANT THIS TO BE A COMPONENT BUT TOO LAZY TO FIGURE IT OUT -->
+        <div class="nav-bar">
+            <button v-if='logged' type='button' v-on:click='logout()'>Logout</button>
+            <div v-else>
+                <button type='button' v-on:click='login()'>Login</button>
+                <button type='button' v-on:click='register()'>Register</button>
+            </div>
+        </div>
+        
         <div class="row">
             <!-- project column -->
             <div class="col s3">
