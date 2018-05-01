@@ -9,37 +9,23 @@ const navBarComponent={
 }
 
 const registrationComponent={
-    template: `<script type="text/x-template" id="modal-template">
-                    <transition name="modal">
-                    <div class="modal-mask">
-                        <div class="modal-wrapper">
-                        <div class="modal-container">
-                
-                            <div class="modal-header">
-                            <slot name="header">
-                                default header
-                            </slot>
-                            </div>
-                
-                            <div class="modal-body">
-                            <slot name="body">
-                                default body
-                            </slot>
-                            </div>
-                
-                            <div class="modal-footer">
-                            <slot name="footer">
-                                default footer
-                                <button class="modal-default-button" @click="$emit('close')">
-                                OK
-                                </button>
-                            </slot>
-                            </div>
-                        </div>
-                        </div>
-                    </div>
-                    </transition>
-            </script>`
+    template: 
+    `
+    <div class="register-modal-container" id="register-modal" @click="close">
+        <div class="register-modal">
+            <div class="form-register" :class="{ 'active': active == 'register' }" id="form-register">
+                <div class="error-message" v-text="registerError"></div>
+                <input type="text" name="name" placeholder="Name" v-model="registerName" @keyup.enter="submit()">
+                <input type="email" name="email" placeholder="Email" v-model="registerEmail" @keyup.enter="submit()">
+                <input type="password" name="password" placeholder="Password" v-model="registerPassword" @keyup.enter="submit()">
+                <input type="submit" :class="{ 'disabled': submitted == 'register' }" @click="submit()" v-model="registerSubmit" id="registerSubmit">
+            </div>
+        </div>
+    </div>`
+}
+
+const regmodal={
+    template: '#modal-template'
 }
 
 const adminComponent={
@@ -57,6 +43,26 @@ const logoutComponent={
 
 
 const socket = io();
+
+const modal=new Vue({
+    el:'#reg-modal',
+    data:{
+        active:false,
+        submitted:false,
+        name:'',
+        password:'',
+
+    },
+    methods:{
+        submit: function(){
+
+        }
+    },
+    components:{
+        'reg-component':registrationComponent
+    }
+});
+
 const app = new Vue({
     el: '#to-do-app',
     data: {
@@ -115,6 +121,7 @@ const app = new Vue({
             socket.emit('set-todo', { projectID: app.currentProject.id, todoObj: app.currentProject.toDoList[index]})
         },
         register: function(){
+            modal.active
             console.log("CREATED THE USER")
         },
         login: function(){
@@ -125,7 +132,8 @@ const app = new Vue({
         }
     },
     components: {
-        'nav-component':navBarComponent
+        'nav-component':navBarComponent,
+        'reg-component':registrationComponent
     }
 });
 
