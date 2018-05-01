@@ -17,7 +17,8 @@ module.exports = (server, db) => {
     // when the page is loaded in the browser the connection event is fired
     io.on('connection', socket => {
 
-
+        //THIS NEEDS TO BE CHANGED TO ANONYMOUS WHEN THE MODALS ARE WORKING
+        socket.emit('anonymous-user',new User(1,'Anonymous','none','Admin'))
         db.getAllProjects().then(projects =>
             // on making a connection refresh all the projects
             socket.emit('refresh-projects', projects))
@@ -147,6 +148,18 @@ module.exports = (server, db) => {
             //     io.emit('send-current-project', project)
             // })
         });
+
+        socket.on('delete-project',data=>{
+            if(data==null){
+                console.log("ERROR: project id is null")
+                return
+            }
+
+            db.deleteProject(data).then(projects=>{
+                socket.emit('refresh-projects', projects)
+            })
+            
+        })
         socket.on('disconnect', () => {
         })
     })

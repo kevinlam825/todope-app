@@ -70,6 +70,15 @@ const findProject = id => {
     return Project.findOne({ 'id': id })
 }
 
+const deleteProject=(id)=>{
+    console.log('DELETE'+id)
+    Project.remove({'id':id},function(err){
+        if(err) return handleError(err)
+
+        //THIS PROMISE NEEDS TO BE FIXED
+    }).then(data=>{return getAllProjects()})
+
+}
 
 // const createMessage = data => {
 //     const content = {
@@ -142,7 +151,8 @@ module.exports = {
     getAllTodos,
     addTodo,
     findProject,
-    saveProject
+    saveProject,
+    deleteProject
     // activeUsers,
     // allMessages,
     // createUser,

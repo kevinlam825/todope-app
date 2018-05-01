@@ -84,6 +84,11 @@ const app = new Vue({
             socket.emit('add-project',app.newProjectName)
             // send project and add it to the list || db
         },
+        deleteProject: function(id){
+            console.log('DELETE'+ id)
+            
+            socket.emit('delete-project',id)
+        },
         selectProject: function (id) {
             console.log("app.js: selectProject(): call")
             app.currentProject = app.projects.find( project => {
@@ -161,5 +166,8 @@ socket.on('send-current-project', currentProject => {
     app.currentProject = currentProject
 });
 
+socket.on('anonymous-user',user=>{
+    app.user=user
+})
 //socket.on... when the server sends to the client
 //socket.emit when client sends to server
