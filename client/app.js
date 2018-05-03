@@ -11,21 +11,22 @@ const navBarComponent={
 const registrationComponent={
     template: 
     `
-    <div class="register-modal-container" id="register-modal" @click="close">
-        <div class="register-modal">
-            <div class="form-register" :class="{ 'active': active == 'register' }" id="form-register">
-                <div class="error-message" v-text="registerError"></div>
-                <input type="text" name="name" placeholder="Name" v-model="registerName" @keyup.enter="submit()">
-                <input type="email" name="email" placeholder="Email" v-model="registerEmail" @keyup.enter="submit()">
-                <input type="password" name="password" placeholder="Password" v-model="registerPassword" @keyup.enter="submit()">
-                <input type="submit" :class="{ 'disabled': submitted == 'register' }" @click="submit()" v-model="registerSubmit" id="registerSubmit">
-            </div>
-        </div>
-    </div>`
+    <modal>
+    <h3 slot="header">Register</h3>
+    <div slot="body">
+        <input type="text" name="name" placeholder="Name" v-model="register.name" @keyup.enter="submit()">
+        <input type="email" name="email" placeholder="Email" v-model="register.email" @keyup.enter="submit()">
+        <input type="password" name="password" placeholder="Password" v-model="register.password" @keyup.enter="submit()">
+    </div>
+    <div slot="footer">
+        <input type="submit" @click="submit()" v-model="register.submit" id="registerSubmit">
+    </div>
+    </modal>`,
+    props:['register']
 }
 
 const regmodal={
-    template: '#modal-template'
+    template: ''
 }
 
 const adminComponent={
@@ -33,7 +34,19 @@ const adminComponent={
 }
 
 const loginComponent={
-
+    template: 
+    `
+    <modal>
+    <h3 slot="header">Login</h3>
+    <div slot="body">
+        <input type="email" name="email" placeholder="Email" v-model="login.email" @keyup.enter="submit()">
+        <input type="password" name="password" placeholder="Password" v-model="login.password" @keyup.enter="submit()">
+    </div>
+    <div slot="footer">
+        <input type="submit" @click="submit()" v-model="login.submit" id="loginSubmit">
+    </div>
+    </modal>`,
+    props:['login']
 }
 
 //MIGHT NOT NEED THIS ONE
@@ -41,7 +54,9 @@ const logoutComponent={
 
 }
 
-
+Vue.component('modal', {
+    template: '#modal-template'
+  })
 const socket = io();
 
 const modal=new Vue({
@@ -73,10 +88,10 @@ const app = new Vue({
         showProject:false,
         newToDoDesc:'',
         newProjectName:'',
-
-        //MODAL
-        showRegisterModal:false,
-        showLoginModal:false
+        showRegister:false,
+        showLogin:false,
+        register:{},
+        login:{}
     },
     methods: {
         addProject: function () {
@@ -125,20 +140,17 @@ const app = new Vue({
             this.currentProject.toDoList[index].completed = !this.currentProject.toDoList[index].completed 
             socket.emit('set-todo', { projectID: app.currentProject.id, todoObj: app.currentProject.toDoList[index]})
         },
-        register: function(){
-            modal.active
-            console.log("CREATED THE USER")
-        },
-        login: function(){
-            console.log("LOGIN USER")
-        },
         logout: function(){
             console.log("LOGOUT USER")   
+        },
+        submit: function(){
+
         }
     },
     components: {
         'nav-component':navBarComponent,
-        'reg-component':registrationComponent
+        'reg-component':registrationComponent,
+        'login-component':loginComponent
     }
 });
 

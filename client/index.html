@@ -23,22 +23,56 @@
     </style>
 </head>
 
+<script type="text/x-template" id="modal-template">
+            <transition name="modal">
+              <div class="modal-mask">
+                <div class="modal-wrapper">
+                  <div class="modal-container">
+          
+                    <div class="modal-header">
+                      <slot name="header">
+                        default header
+                      </slot>
+                    </div>
+          
+                    <div class="modal-body">
+                      <slot name="body">
+                        default body
+                      </slot>
+                    </div>
+          
+                    <div class="modal-footer">
+                      <slot name="footer">
+                        default footer
+                        <button class="modal-default-button" @click="$emit('close')">
+                          OK
+                        </button>
+                      </slot>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </transition>
+        </script>
+
+  
 <body>
-    <div id="reg-modal">
         
-    </div>
     <div id="to-do-app">
 
         <!-- WANT THIS TO BE A COMPONENT BUT TOO LAZY TO FIGURE IT OUT -->
         <div class="nav-bar">
             <button v-if='logged' type='button' v-on:click='logout()'>Logout</button>
             <div v-else>
-                <button type='button' v-on:click='login()'>Login</button>
-                <button type='button' v-on:click='register()'>Register</button>
+                <button type='button' @click="showLogin=true">Login</button>
+                <button type='button' @click="showRegister=true">Register</button>
                 <label>{{user.name}}</label>
             </div>
         </div>
         
+        
+            <reg-component v-bind:register="register" v-if="showRegister"></reg-component>
+            <login-component v-bind:login="login" v-if="showLogin"></login-component>
         <div class="row">
             <!-- project column -->
             <div class="col s3">
