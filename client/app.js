@@ -126,8 +126,11 @@ const app = new Vue({
             console.log("app.js: addToDo: app.currentProject: ", app.currentProject)
             socket.emit('add-todo', { projectID: app.currentProject.id, name: this.newToDoDesc, completed: false })
         },
-        deleteToDo: function (){
-            console.log("delete")
+        deleteToDo: function (id){
+            if (!this.currentProject || id==null)
+                return
+
+            socket.emit('remove-todo', { projectID: app.currentProject.id, todoID: id })
         },
         completeToDo: function(id) {
             //need to figure out why the checkbox wont show in the table

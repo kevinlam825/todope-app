@@ -109,10 +109,29 @@ module.exports = (server, db) => {
                         })
                 }
             })
-
-
-
         });
+
+        socket.on('remove-todo', data => {
+ 
+            db.findProject(data.projectID).then(project => {
+                if (project == null) {
+                    console.log("Something seriously went wrong")
+                    return
+                }
+
+                project.toDoList = project.toDoList.filter(todo => todo._id != data.todoID)
+
+                db.saveProject(project)
+                    .then(_ => {
+                        db.getAllProjects().then(projects => {
+                            console.log("removing selected todo, about to call refresh-projects")
+                            socket.emit('refresh-projects', projects)
+                            console.log(projects)
+                        })
+                    })
+            })
+        });
+
         socket.on('set-todo', data => {
             
             db.findProject(data.projectID).then(project => {
