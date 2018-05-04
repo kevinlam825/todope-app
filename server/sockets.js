@@ -36,34 +36,13 @@ module.exports = (server, db) => {
             })
         });
         socket.on('remove-completed-todos', projectID => {
-            // projects.forEach(project => {
-            //     if(project.id == data){
-            //         project.toDoList.forEach(todo =>{
-            //             if(todo.completed == true){
-            //                 const index = project.toDoList.indexOf(todo);
-            //                 project.toDoList.splice(index, 1);
-            //             }
-            //         })
-            //         io.emit('send-current-project', project)
-            //     }
-            // })
 
             db.findProject(projectID).then(project => {
                 if (project == null) {
                     console.log("Something seriously went wrong")
                     return
                 }
-                
-                // project.toDoList.forEach(todo => {
-                //     if (todo.completed == true){
-                //         //console.log(todo)
-                //         const todoIndex = project.toDoList.indexOf(todo)
-                //         console.log(todoIndex)
-                //         console.log(project.toDoList[todoIndex])
-                //         project.toDoList.splice(todoIndex, 1)
-                //     }
-                // })
-
+   
                 project.toDoList = project.toDoList.filter(todo => todo.completed == false)
 
                 db.saveProject(project)
