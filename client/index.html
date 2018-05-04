@@ -21,6 +21,9 @@
             display: none;
         }
     </style>
+
+
+
 </head>
 
 <script type="text/x-template" id="modal-template">
@@ -77,12 +80,16 @@
             <!-- project column -->
             <div class="col s3">
                 <h4>Projects</h4>
-                <ul>
-                    <li v-for='project in projects'><button v-on:click='deleteProject(project.id)' v-if="(user.role=='Admin')">X</button><button v-on:click='selectProject(project.id)'>{{project.name}}</button></li>
-                </ul>
+
                 <div v-if="(user.role != 'Guest')">
-                    <input v-on:keydown.enter="addProject()" type="text" v-model="newProjectName" placeholder='New Project'>
+                    <input v-on:keydown.enter="addProject()" type="text" v-model="newProjectName" placeholder='Add New Project'>
                 </div>
+
+                <div class="collection" v-for='project in projects'>
+                        <a class="collection-item blue lighten-2 white-text" v-on:click='selectProject(project.id)'>{{project.name}}</a>
+                </div>
+    
+                
             </div>
             <!-- To Dos column-->
             <div class="col s9" v-show='showProject'>
@@ -98,15 +105,15 @@
                             </td>
                             <td v-if="todo.completed">True</td>
                             <td v-else>False OR Leave Blank? (For not completed)</td>
-                            <td> <a v-if="(user.role=='Admin')" class="btn-floating red" v-on:click='deleteToDo(todo._id)'><i class="material-icons">delete_forever</i></a></td>
-                            
+                            <td> <a class="btn-floating red" v-on:click='deleteToDo(todo._id)' v-if="(user.role=='Admin')"><i class="material-icons">delete_forever</i></a></td>
                         </tr>
                     </table>   
 
                     <div v-if="(user.role != 'Guest')">
                         <input type="text" v-model="newToDoDesc" placeholder='New Task'>
-                        <button type='button' v-on:click='addToDo()'>Add</button>
-                        <button v-on:click='removeCompletedToDos()'>Clear Completed Tasks</button>        
+                        <a class="waves-effect waves-light btn green" v-on:click='addToDo()'><i class="material-icons right">add_circle_outline</i>Add</a>
+                        <a class="waves-effect waves-light btn deep-orange accent-4" v-on:click='removeCompletedToDos()' v-if="(user.role=='Admin')"><i class="material-icons right">cancel</i>Clear Completed Tasks</a>
+                        <a class="right waves-effect waves-light btn red" v-on:click='deleteProject(currentProject._id)' v-if="(user.role=='Admin')"><i class="material-icons right">warning</i>Delete Project</a>
                     </div>
 
             </div>
