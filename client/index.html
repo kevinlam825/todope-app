@@ -105,14 +105,14 @@
                             </td>
                             <td v-if="todo.completed">True</td>
                             <td v-else>False OR Leave Blank? (For not completed)</td>
-                            <td> <a class="btn-floating red" v-on:click='deleteToDo(todo._id)'><i class="material-icons">delete_forever</i></a></td>
+                            <td> <a class="btn-floating red" v-on:click='deleteToDo(todo._id)' v-if="(user.role=='Admin')"><i class="material-icons">delete_forever</i></a></td>
                         </tr>
                     </table>   
 
                     <div v-if="(user.role != 'Guest')">
                         <input type="text" v-model="newToDoDesc" placeholder='New Task'>
                         <a class="waves-effect waves-light btn green" v-on:click='addToDo()'><i class="material-icons right">add_circle_outline</i>Add</a>
-                        <a class="waves-effect waves-light btn deep-orange accent-4" v-on:click='removeCompletedToDos()'><i class="material-icons right">cancel</i>Clear Completed Tasks</a>
+                        <a class="waves-effect waves-light btn deep-orange accent-4" v-on:click='removeCompletedToDos()' v-if="(user.role=='Admin')"><i class="material-icons right">cancel</i>Clear Completed Tasks</a>
                         <a class="right waves-effect waves-light btn red" v-on:click='deleteProject(currentProject._id)' v-if="(user.role=='Admin')"><i class="material-icons right">warning</i>Delete Project</a>
                     </div>
 
