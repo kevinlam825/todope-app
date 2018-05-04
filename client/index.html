@@ -98,7 +98,7 @@
                             </td>
                             <td v-if="todo.completed">True</td>
                             <td v-else>False OR Leave Blank? (For not completed)</td>
-                            <td> <a class="btn-floating red" v-on:click='deleteToDo(todo._id)'><i class="material-icons">delete_forever</i></a></td>
+                            <td> <a v-if="(user.role=='Admin')" class="btn-floating red" v-on:click='deleteToDo(todo._id)'><i class="material-icons">delete_forever</i></a></td>
                             
                         </tr>
                     </table>   
