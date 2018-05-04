@@ -36,17 +36,6 @@ module.exports = (server, db) => {
             })
         });
         socket.on('remove-completed-todos', projectID => {
-            // projects.forEach(project => {
-            //     if(project.id == data){
-            //         project.toDoList.forEach(todo =>{
-            //             if(todo.completed == true){
-            //                 const index = project.toDoList.indexOf(todo);
-            //                 project.toDoList.splice(index, 1);
-            //             }
-            //         })
-            //         io.emit('send-current-project', project)
-            //     }
-            // })
 
             db.findProject(projectID).then(project => {
                 if (project == null) {
@@ -54,16 +43,6 @@ module.exports = (server, db) => {
                     return
                 }
                 
-                // project.toDoList.forEach(todo => {
-                //     if (todo.completed == true){
-                //         //console.log(todo)
-                //         const todoIndex = project.toDoList.indexOf(todo)
-                //         console.log(todoIndex)
-                //         console.log(project.toDoList[todoIndex])
-                //         project.toDoList.splice(todoIndex, 1)
-                //     }
-                // })
-
                 project.toDoList = project.toDoList.filter(todo => todo.completed == false)
 
                 db.saveProject(project)
@@ -79,14 +58,6 @@ module.exports = (server, db) => {
         socket.on('add-todo', todo => {
             //Create new ToDo
             console.log("add todo")
-            // db.addTodo(todo).then(project => {
-            //     db.getAllProjects().then(projects => {
-            //         socket.emit('refresh-projects', projects)
-            //         console.log(projects)
-            //     })
-            // })
-
-            // { projectID: this.currentProject._id, name: this.newToDoDesc, completed: false }
 
             console.log("todo.projectID = "+ todo.projectID)
             db.findProject(todo.projectID).then(project => {
@@ -155,17 +126,6 @@ module.exports = (server, db) => {
                 }
             })
 
-
-            // // find the todo from its project and change it to completed
-            // projects.forEach(project => {
-            //     if (project.id == data.projectID) {
-            //         project.toDoList.forEach(todo => {
-            //             if (todo.id == data.todoID)
-            //                 todo.completed = true
-            //         })
-            //     }
-            //     io.emit('send-current-project', project)
-            // })
         });
 
         socket.on('delete-project',data=>{
