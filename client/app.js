@@ -71,7 +71,7 @@ const loginComponent={
     <modal>
     <h3 slot="header">Login</h3>
     <div slot="body">
-        <input type="email" name="email" placeholder="Email" v-model="login.email">
+        <input type="email" name="name" placeholder="email" v-model="login.name">
         <input type="password" name="password" placeholder="Password" v-model="login.password">
     </div>
     <div slot="footer">
@@ -81,12 +81,12 @@ const loginComponent={
     </modal>`,    
     data:{
         login:{
-        email:'',
+        name:'',
         password:''}
     },
     methods:{
         submit: function(){
-            if(this.login.email && this.login.password){
+            if(this.login.name && this.login.password){
                 app.showLogin=false
                 app.submit(this.login,'login')
             }
@@ -133,7 +133,7 @@ const app = new Vue({
         },
         deleteProject: function(id){
             console.log('DELETE'+ id)
-            
+            app.showProject=false
             socket.emit('delete-project',id)
         },
         selectProject: function (id) {
@@ -215,6 +215,11 @@ socket.on('send-current-project', currentProject => {
 });
 
 socket.on('anonymous-user',user=>{
+    app.user=user
+})
+
+socket.on('refresh-user',user=>{
+    console.log(user)
     app.user=user
 })
 //socket.on... when the server sends to the client
