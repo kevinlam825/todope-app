@@ -1,5 +1,6 @@
 // Components
 //Bar for the top of the page. Contains login/logout/register and an admin page
+
 const navBarComponent={
     template: ` <div class="nav-bar">
                     <button v-if='logged' type='button' v-on:click='login()'>Login</button>
@@ -14,14 +15,45 @@ const registrationComponent={
     <modal>
     <h3 slot="header">Register</h3>
     <div slot="body">
-        <input type="text" name="name" placeholder="Name" v-model="register.name" @keyup.enter="submit()">
-        <input type="email" name="email" placeholder="Email" v-model="register.email" @keyup.enter="submit()">
-        <input type="password" name="password" placeholder="Password" v-model="register.password" @keyup.enter="submit()">
+    <form @submit.prevent="submit()">
+        <label v-if="register.errorName">Error</label><input type="text" name="name" placeholder="Name" v-model="register.name">
+        <input type="email" name="email" placeholder="Email" v-model="register.email">
+        <input type="password" name="password" placeholder="Password" v-model="register.password">
+        <div>
+        <label>Select a User Role</label>
+            <select v-model="register.role">
+                <option>Admin</option>
+                <option>User</option>
+            </select>
+        </div>  
     </div>
     <div slot="footer">
-        <input type="submit" @click="submit()" v-model="register.submit" id="registerSubmit">
+        <button @click="cancel()" id="cancelSubmit" @click="$emit('close')">Cancel</button>
+        <input type="submit" @click="submit()" id="registerSubmit" @click="$emit('close')">
+       
+    </form>
     </div>
     </modal>`,
+    data:{
+        register:{
+        name:'',
+        email:'',
+        password:'',
+        role:'User'}
+    },
+    methods:{
+        submit: function(){
+            if(this.register.name && this.register.email && this.register.password){
+                this.register.role='User'
+                app.showRegister=false
+                app.submit(this.register,'register')
+            }
+            
+        },
+        cancel: function(){
+            app.showRegister=false
+        }
+    },
     props:['register']
 }
 
@@ -39,39 +71,39 @@ const loginComponent={
     <modal>
     <h3 slot="header">Login</h3>
     <div slot="body">
-        <input type="email" name="email" placeholder="Email" v-model="login.email" @keyup.enter="submit()">
-        <input type="password" name="password" placeholder="Password" v-model="login.password" @keyup.enter="submit()">
+        <input type="email" name="name" placeholder="email" v-model="login.name">
+        <input type="password" name="password" placeholder="Password" v-model="login.password">
     </div>
     <div slot="footer">
-        <input type="submit" @click="submit()" v-model="login.submit" id="loginSubmit">
+        <button @click="cancel()" id="cancelSubmit" @click="$emit('close')">Cancel</button>
+        <input type="submit" @click="submit()" id="loginSubmit" @click="$emit('close')">
     </div>
-    </modal>`,
+    </modal>`,    
+    data:{
+        login:{
+        name:'',
+        password:''}
+    },
+    methods:{
+        submit: function(){
+            if(this.login.name && this.login.password){
+                app.showLogin=false
+                app.submit(this.login,'login')
+            }
+            
+        },
+        cancel: function(){
+            app.showLogin=false
+        }
+    },
     props:['login']
 }
 
 Vue.component('modal', {
     template: '#modal-template'
   })
+
 const socket = io();
-
-const modal=new Vue({
-    el:'#reg-modal',
-    data:{
-        active:false,
-        submitted:false,
-        name:'',
-        password:'',
-
-    },
-    methods:{
-        submit: function(){
-
-        }
-    },
-    components:{
-        'reg-component':registrationComponent
-    }
-});
 
 const app = new Vue({
     el: '#to-do-app',
@@ -96,7 +128,7 @@ const app = new Vue({
         },
         deleteProject: function(id){
             console.log('DELETE'+ id)
-            
+            app.showProject=false
             socket.emit('delete-project',id)
         },
         selectProject: function (id) {
@@ -141,8 +173,9 @@ const app = new Vue({
         logout: function(){
             console.log("LOGOUT USER")   
         },
-        submit: function(){
-
+        submit: function(data,state){
+            if(state==='register')socket.emit('register', data)
+            if(state==='login')socket.emit('login',data)
         }
     },
     components: {
@@ -176,6 +209,11 @@ socket.on('send-current-project', currentProject => {
 });
 
 socket.on('anonymous-user',user=>{
+    app.user=user
+})
+
+socket.on('refresh-user',user=>{
+    console.log(user)
     app.user=user
 })
 //socket.on... when the server sends to the client

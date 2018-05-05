@@ -80,6 +80,26 @@ const deleteProject=(id)=>{
 
 }
 
+const createUser=(data)=>{
+    console.log('Registering User')
+
+    const content={
+        id:new Mongoose.Types.ObjectId,
+        name:data.name,
+        //email:data.email,
+        password:data.password,
+        role:data.role
+    }
+    console.log(content)
+    return User.create(content)
+    //User.create(content)
+}
+
+const loginUser=(user)=>{
+    console.log('Logging User')
+    console.log(user)
+    return User.findOne({'name':user.name, 'password':user.password})
+}
 // const createMessage = data => {
 //     const content = {
 //         user: data.user,
@@ -152,7 +172,9 @@ module.exports = {
     addTodo,
     findProject,
     saveProject,
-    deleteProject
+    deleteProject,
+    createUser,
+    loginUser
     // activeUsers,
     // allMessages,
     // createUser,
