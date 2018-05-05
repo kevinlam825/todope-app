@@ -140,6 +140,21 @@ module.exports = (server, db) => {
             })
             
         })
+
+        socket.on('register', data=>{
+            if(data==null){
+                console.log("Error occurred while registering user")
+            }
+            db.createUser(data)
+        })
+
+        socket.on('login',data=>{
+            if(data==null){
+                console.log("Error occurred while logging in")
+            }
+            console.log("logging in")
+            db.loginUser(data)
+        })
         socket.on('disconnect', () => {
         })
     })
