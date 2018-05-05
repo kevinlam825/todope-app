@@ -135,7 +135,8 @@ module.exports = (server, db) => {
             }
 
             db.deleteProject(data).then(projects=>{
-                socket.emit('refresh-projects', projects)
+                socket.emit('refresh-projects',projects)
+
             })
             
         })

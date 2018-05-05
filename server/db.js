@@ -72,11 +72,11 @@ const findProject = id => {
 
 const deleteProject=(id)=>{
     console.log('DELETE'+id)
-    Project.remove({'id':id},function(err){
-        if(err) return handleError(err)
-
-        //THIS PROMISE NEEDS TO BE FIXED
-    }).then(data=>{return getAllProjects()})
+    Project.remove({'_id':id},function(err){
+        if(err) return handleError(err) 
+        
+    })
+    return getAllProjects()
 
 }
 
