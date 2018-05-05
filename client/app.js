@@ -49,11 +49,6 @@ const loginComponent={
     props:['login']
 }
 
-//MIGHT NOT NEED THIS ONE
-const logoutComponent={
-
-}
-
 Vue.component('modal', {
     template: '#modal-template'
   })
@@ -156,7 +151,6 @@ const app = new Vue({
         'login-component':loginComponent
     }
 });
-
 
 // when user first opens up browser to obtain their projects.
 socket.on('refresh-projects', projects => {
