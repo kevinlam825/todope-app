@@ -18,7 +18,7 @@ module.exports = (server, db) => {
     io.on('connection', socket => {
 
         //THIS NEEDS TO BE CHANGED TO ANONYMOUS WHEN THE MODALS ARE WORKING
-        socket.emit('anonymous-user',new User(1,'Anonymous','none','Admin'))
+        socket.emit('anonymous-user',new User(1,'Anonymous','none','Guest'))
         db.getAllProjects().then(projects =>
             // on making a connection refresh all the projects
             socket.emit('refresh-projects', projects))
