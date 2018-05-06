@@ -118,6 +118,7 @@ const app = new Vue({
             console.log(app.newProjectName)
             socket.emit('add-project',app.newProjectName)
             // send project and add it to the list || db
+            app.newProjectName = ''
         },
         deleteProject: function(id){
             console.log('DELETE'+ id)
@@ -145,6 +146,7 @@ const app = new Vue({
 
             console.log("app.js: addToDo: app.currentProject: ", app.currentProject)
             socket.emit('add-todo', { projectID: app.currentProject.id, name: this.newToDoDesc, completed: false })
+            app.newToDoDesc = ''
         },
         deleteToDo: function (id){
             if (!this.currentProject || id==null)
