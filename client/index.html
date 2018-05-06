@@ -75,7 +75,8 @@
         <div class="row">
             <!-- project column -->
             <div class="col s3">
-                <h5>{{user.name}}'s projects</h5>
+                <h5 v-if="(user.role != 'Guest')">{{user.name}}'s projects</h5>
+                <h5 v-else>Projects</h5>
 
                 <div v-if="(user.role != 'Guest')">
                     <input v-on:keydown.enter="addProject()" type="text" v-model="newProjectName" placeholder='Add New Project'>
