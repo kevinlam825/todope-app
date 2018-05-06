@@ -63,8 +63,10 @@
         <!-- nav bar-->
         <div class="nav-bar">
             <button v-if='loggedIn' type='button' v-on:click='logout()'>Logout</button>
-            <button class='dash-button' @click="showLogin=true">Login</button>
-            <button class='dash-button' @click="showRegister=true">Register</button>
+            <div v-else>
+                <button class='dash-button' @click="showLogin=true">Login</button>
+                <button class='dash-button' @click="showRegister=true">Register</button>
+            </div>
         </div>
 
         <reg-component v-bind:register="register" v-if="showRegister"></reg-component>

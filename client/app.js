@@ -35,18 +35,13 @@ const registrationComponent={
     </form>
     </div>
     </modal>`,
-    data:{
-        register:{
-        name:'',
-        email:'',
-        password:'',
-        role:'User'}
-    },
+
     methods:{
         submit: function(){
             if(this.register.name && this.register.email && this.register.password){
                 this.register.role='User'
                 app.showRegister=false
+                app.loggedIn=true
                 app.submit(this.register,'register')
             }
             
@@ -81,15 +76,11 @@ const loginComponent={
         <input type="submit" @click="submit()" id="loginSubmit" @click="$emit('close')">
     </div>
     </modal>`,    
-    data:{
-        login:{
-        name:'',
-        password:''}
-    },
     methods:{
         submit: function(){
             if(this.login.name && this.login.password){
                 app.showLogin=false
+                app.loggedIn=true
                 app.submit(this.login,'login')
             }
             
@@ -173,7 +164,9 @@ const app = new Vue({
             socket.emit('set-todo', { projectID: app.currentProject.id, todoObj: app.currentProject.toDoList[index]})
         },
         logout: function(){
-            console.log("LOGOUT USER")   
+            console.log("LOGOUT USER")
+            app.loggedIn=false
+            app.user={name:'Anonymous',role:'Guest'}
         },
         submit: function(data,state){
             if(state==='register')socket.emit('register', data)
