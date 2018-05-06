@@ -3,7 +3,7 @@
 
 const navBarComponent={
     template: ` <div class="nav-bar">
-                    <button v-if='logged' type='button' v-on:click='login()'>Login</button>
+                    <button v-if='loggedIn' type='button' v-on:click='login()'>Login</button>
                     <button v-else type='button' v-on:click='logout()'>Logout</button>
                 </div>`,
     props:['user']
@@ -13,7 +13,10 @@ const registrationComponent={
     template: 
     `
     <modal>
-    <h3 slot="header">Register</h3>
+
+    <h3 slot="header">Register
+    <span><img @click="cancel()" @click="$emit('close')" style='float: right;' src='img/letter-x.png'></span>
+    </h3>
     <div slot="body">
     <form @submit.prevent="submit()">
         <label v-if="register.errorName">Error</label><input type="text" name="name" placeholder="Name" v-model="register.name">
@@ -25,12 +28,10 @@ const registrationComponent={
                 <option>Admin</option>
                 <option>User</option>
             </select>
-        </div>  
+        </div>   
     </div>
     <div slot="footer">
-        <button @click="cancel()" id="cancelSubmit" @click="$emit('close')">Cancel</button>
         <input type="submit" @click="submit()" id="registerSubmit" @click="$emit('close')">
-       
     </form>
     </div>
     </modal>`,
@@ -69,13 +70,14 @@ const loginComponent={
     template: 
     `
     <modal>
-    <h3 slot="header">Login</h3>
+    <h3 slot="header">Login
+    <span><img @click="cancel()" @click="$emit('close')" style='float: right;' src='img/letter-x.png'></span>
+    </h3>
     <div slot="body">
         <input type="email" name="name" placeholder="email" v-model="login.name">
         <input type="password" name="password" placeholder="Password" v-model="login.password">
     </div>
     <div slot="footer">
-        <button @click="cancel()" id="cancelSubmit" @click="$emit('close')">Cancel</button>
         <input type="submit" @click="submit()" id="loginSubmit" @click="$emit('close')">
     </div>
     </modal>`,    
@@ -99,11 +101,6 @@ const loginComponent={
     props:['login']
 }
 
-//MIGHT NOT NEED THIS ONE
-const logoutComponent={
-
-}
-
 Vue.component('modal', {
     template: '#modal-template'
   })
@@ -114,7 +111,7 @@ const app = new Vue({
     el: '#to-do-app',
     data: {
         user:'',
-        logged:false,
+        loggedIn:false,
         projects:[],
         currentProject:{},
         showProject:false,
@@ -189,7 +186,6 @@ const app = new Vue({
         'login-component':loginComponent
     }
 });
-
 
 // when user first opens up browser to obtain their projects.
 socket.on('refresh-projects', projects => {

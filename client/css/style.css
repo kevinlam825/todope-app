@@ -1,6 +1,21 @@
 .nav-bar{
 	background: rgb(76, 87, 179);
-	border-radius:4px;
+	padding: 0 .5em;
+	height:32px;
+	display:flex;
+	flex-direction: row;
+	justify-content: flex-end;
+	align-items: center;
+}
+.dash-button {
+	height:100%;
+	border:none;
+	background-color: unset;
+	color:white;
+}
+.dash-button :focus {
+	background-color: unset;
+
 }
 .register-modal-container * {
 	box-sizing: border-box;
