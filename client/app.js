@@ -13,7 +13,10 @@ const registrationComponent={
     template: 
     `
     <modal>
-    <h3 slot="header">Register</h3>
+
+    <h3 slot="header">Register
+    <span><img @click="cancel()" @click="$emit('close')" style='float: right;' src='img/letter-x.png'></span>
+    </h3>
     <div slot="body">
     <form @submit.prevent="submit()">
         <label v-if="register.errorName">Error</label><input type="text" name="name" placeholder="Name" v-model="register.name">
@@ -25,12 +28,10 @@ const registrationComponent={
                 <option>Admin</option>
                 <option>User</option>
             </select>
-        </div>  
+        </div>   
     </div>
     <div slot="footer">
-        <button @click="cancel()" id="cancelSubmit" @click="$emit('close')">Cancel</button>
         <input type="submit" @click="submit()" id="registerSubmit" @click="$emit('close')">
-       
     </form>
     </div>
     </modal>`,
@@ -69,13 +70,14 @@ const loginComponent={
     template: 
     `
     <modal>
-    <h3 slot="header">Login</h3>
+    <h3 slot="header">Login
+    <span><img @click="cancel()" @click="$emit('close')" style='float: right;' src='img/letter-x.png'></span>
+    </h3>
     <div slot="body">
         <input type="email" name="name" placeholder="email" v-model="login.name">
         <input type="password" name="password" placeholder="Password" v-model="login.password">
     </div>
     <div slot="footer">
-        <button @click="cancel()" id="cancelSubmit" @click="$emit('close')">Cancel</button>
         <input type="submit" @click="submit()" id="loginSubmit" @click="$emit('close')">
     </div>
     </modal>`,    
