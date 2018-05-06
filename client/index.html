@@ -117,7 +117,7 @@
                 </table>
                 <!-- buttons on bottom -->
                 <div v-if="(user.role != 'Guest')">
-                    <input type="text" v-model="newToDoDesc" placeholder='New Task'>
+                    <input v-on:keydown.enter="addToDo()" type="text" v-model="newToDoDesc" placeholder='New Task'>
                     <a class="waves-effect waves-light btn green" v-on:click='addToDo()'>
                         <i class="material-icons right">add_circle_outline</i>Add</a>
                     <a class="waves-effect waves-light btn deep-orange accent-4" v-on:click='removeCompletedToDos()' v-if="(user.role=='Admin')">
