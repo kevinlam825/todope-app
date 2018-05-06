@@ -3,7 +3,7 @@
 
 const navBarComponent={
     template: ` <div class="nav-bar">
-                    <button v-if='logged' type='button' v-on:click='login()'>Login</button>
+                    <button v-if='loggedIn' type='button' v-on:click='login()'>Login</button>
                     <button v-else type='button' v-on:click='logout()'>Logout</button>
                 </div>`,
     props:['user']
@@ -111,7 +111,7 @@ const app = new Vue({
     el: '#to-do-app',
     data: {
         user:'',
-        logged:false,
+        loggedIn:false,
         projects:[],
         currentProject:{},
         showProject:false,

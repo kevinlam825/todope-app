@@ -62,12 +62,9 @@
     <div id="to-do-app">
         <!-- nav bar-->
         <div class="nav-bar">
-            <button v-if='logged' type='button' v-on:click='logout()'>Logout</button>
-            <div v-else>
-                <button type='button' @click="showLogin=true">Login</button>
-                <button type='button' @click="showRegister=true">Register</button>
-                <label>{{user.name}}</label>
-            </div>
+            <button v-if='loggedIn' type='button' v-on:click='logout()'>Logout</button>
+            <button class='dash-button' @click="showLogin=true">Login</button>
+            <button class='dash-button' @click="showRegister=true">Register</button>
         </div>
 
         <reg-component v-bind:register="register" v-if="showRegister"></reg-component>
@@ -76,7 +73,7 @@
         <div class="row">
             <!-- project column -->
             <div class="col s3">
-                <h4>Projects</h4>
+                <h5>{{user.name}}'s projects</h5>
 
                 <div v-if="(user.role != 'Guest')">
                     <input v-on:keydown.enter="addProject()" type="text" v-model="newProjectName" placeholder='Add New Project'>
@@ -100,10 +97,10 @@
                     <tr v-for='todo in currentProject.toDoList'>
                         <td>
                             <label>
-                                    {{todo.name}}
+                                {{todo.name}}
                             </label>
                         </td>
-                        <td>    
+                        <td>
                             <label>
                                 <input type="checkbox" class="filled-in" v-model="todo.completed" v-on:click='completeToDo(todo._id)' v-if="(user.role != 'Guest')">
                                 <span></span>
