@@ -18,7 +18,7 @@ module.exports = (server, db) => {
     io.on('connection', socket => {
 
         //THIS NEEDS TO BE CHANGED TO ANONYMOUS WHEN THE MODALS ARE WORKING
-        socket.emit('anonymous-user',new User(1,'Anonymous','none','Guest'))
+        socket.emit('anonymous-user',new User(1,'Anonymous','','','Guest'))
         db.getAllProjects().then(projects =>
             // on making a connection refresh all the projects
             socket.emit('refresh-projects', projects))
@@ -145,23 +145,34 @@ module.exports = (server, db) => {
             if(data==null){
                 console.log("Error occurred while registering user")
             }
-            db.createUser(data).then(user=>{
-                db.loginUser(user).then(user=>{
-                    console.log(user)
-                    socket.emit('refresh-user',user)
+            db.createUser(data)
+                .then(user=>{
+                    db.loginUser(user).then(user=>{
+                        console.log(user)
+                        socket.emit('refresh-user',user)
+                    })
                 })
-            })
+                .catch(err => {
+                    socket.emit('failed-register')
+                })
         })
 
         socket.on('login',data=>{
             if(data==null){
                 console.log("Error occurred while logging in")
+                socket.emit('failed-login')
+                throw new Error('Null data trying to login')
             }
             console.log("logging in")
-            db.loginUser(data).then(user=>{
-                console.log(user)
-                if(user)socket.emit('refresh-user',user)
-            })
+            db.loginUser(data)
+                .then(user=>{
+                    console.log(user)
+                    if(user)socket.emit('refresh-user',user)
+                })
+                .catch(err => {
+                    console.log("Failed-login error caught!")
+                    socket.emit('failed-login')
+                })
         })
 
         socket.on('disconnect', () => {
