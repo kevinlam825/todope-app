@@ -32,7 +32,7 @@ const registrationComponent={
     </div>
     <div slot="footer">
         <p v-if="app.failedRegister" style="color: #fb78ad">{{app.failedRegister}}</p>
-        <input type="submit" @click="submit()" id="registerSubmit" @click="$emit('close')">
+        <input type="submit" @click="submit()" id="registerSubmit">
     </form>
     </div>
     </modal>`,
@@ -72,7 +72,7 @@ const loginComponent={
     </div>
     <div slot="footer">
         <p v-show="app.failedLogin" style="color: #fb78ad">Invalid Username/Password!</p>
-        <input type="submit" @click="submit()" id="loginSubmit" @click="$emit('close')">
+        <input type="submit" @click="submit()" id="loginSubmit">
     </div>
     </modal>`,    
     methods:{
@@ -215,6 +215,7 @@ socket.on('refresh-user',user=>{
         app.failedRegister = ''
         app.loggedIn = true
         app.showLogin = false
+        app.showRegister=false
     }
 })
 
