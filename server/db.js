@@ -102,6 +102,10 @@ const createUser=(data)=>{
         console.log(user)
         return User.create(user)
     })
+    .catch(err=>{
+        console.log("error")
+        
+    })
     
     // return User.create(content)
     //User.create(content)
@@ -124,7 +128,7 @@ const findUserByEmail = email => {
     atIndex = email.indexOf('@')
     dotIndex = email.lastIndexOf('.')
     if(atIndex >= dotIndex) {
-        throw new Error('Invalid Email')
+        //throw new Error('Invalid Email')
     }
     // some filtering for dup gmail tricks
     if(email.substring(atIndex+1, dotIndex).toLowerCase() == 'gmail') {
