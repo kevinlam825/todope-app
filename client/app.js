@@ -42,7 +42,7 @@ const registrationComponent={
                 this.register.role='User'
                 app.showRegister=false
                 app.loggedIn=true
-                app.submit(this.register,'register')
+                socket.emit('register',this.register)
             }
             
         },
@@ -81,7 +81,7 @@ const loginComponent={
             if(this.login.name && this.login.password){
                 app.showLogin=false
                 app.loggedIn=true
-                app.submit(this.login,'login')
+                socket.emit('login',this.login)
             }
             
         },
@@ -101,7 +101,7 @@ const socket = io();
 const app = new Vue({
     el: '#to-do-app',
     data: {
-        user:'',
+        user:{name:'Anonymous',role:'Guest'},
         loggedIn:false,
         projects:[],
         currentProject:{},

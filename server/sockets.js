@@ -8,17 +8,9 @@ module.exports = (server, db) => {
     // const projects = [];
     let counter = 0
 
-    // const projects = [
-    //     new Project(counter++,'berlin wall','',[ new ToDo(0,'divide germany into 4 parts','',false)]),
-    //     new Project(counter++, 'robot waifus','', [new ToDo(0,'robot titties','',false)]),
-    //     new Project(counter++, 'laser beam sharks','', [new ToDo(0,'find sharks','',false)]),
-    // ];
-
     // when the page is loaded in the browser the connection event is fired
     io.on('connection', socket => {
 
-        //THIS NEEDS TO BE CHANGED TO ANONYMOUS WHEN THE MODALS ARE WORKING
-        socket.emit('anonymous-user',new User(1,'Anonymous','none','Guest'))
         db.getAllProjects().then(projects =>
             // on making a connection refresh all the projects
             socket.emit('refresh-projects', projects))
@@ -30,7 +22,7 @@ module.exports = (server, db) => {
             // projects.push(project)
             db.addProject(project).then(project => {
                 db.getAllProjects().then(projects => {
-                    socket.emit('refresh-projects', projects)
+                    io.emit('refresh-projects', projects)
                     console.log(projects)
                 })
             })
@@ -49,7 +41,7 @@ module.exports = (server, db) => {
                     .then(_ => {
                         db.getAllProjects().then(projects => {
                             console.log("removing all compelted todos, about to call refresh-projects")
-                            socket.emit('refresh-projects', projects)
+                            io.emit('refresh-projects', projects)
                             console.log(projects)
                         })
                     })
@@ -74,7 +66,7 @@ module.exports = (server, db) => {
                         .then(_ => {
                             db.getAllProjects().then(projects => {
                                 console.log("Adding todo, about to call refresh-projects")
-                                socket.emit('refresh-projects', projects)
+                                io.emit('refresh-projects', projects)
                                 console.log(projects)
                             })
                         })
@@ -96,7 +88,7 @@ module.exports = (server, db) => {
                     .then(_ => {
                         db.getAllProjects().then(projects => {
                             console.log("removing selected todo, about to call refresh-projects")
-                            socket.emit('refresh-projects', projects)
+                            io.emit('refresh-projects', projects)
                             console.log(projects)
                         })
                     })
@@ -119,7 +111,7 @@ module.exports = (server, db) => {
                     db.saveProject(project)
                         .then(project => {
                             db.getAllProjects().then(projects => {
-                                socket.emit('refresh-projects', projects)
+                                io.emit('refresh-projects', projects)
                                 console.log(projects)
                             })
                         })
@@ -135,7 +127,7 @@ module.exports = (server, db) => {
             }
 
             db.deleteProject(data).then(projects=>{
-                socket.emit('refresh-projects',projects)
+                io.emit('refresh-projects',projects)
 
             })
             

@@ -105,7 +105,7 @@
                         </td>
                         <td>
                             <label>
-                                <input type="checkbox" class="filled-in" v-model="todo.completed" v-on:click='completeToDo(todo._id)' v-if="(user.role != 'Guest')">
+                                <input type="checkbox" class="filled-in" v-model="todo.completed" v-on:click='completeToDo(todo._id)' :disabled="(user.role == 'Guest')">
                                 <span></span>
                             </label>
                         </td>
