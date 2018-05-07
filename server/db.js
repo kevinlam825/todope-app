@@ -13,6 +13,7 @@ Mongoose.connection.on('error', err => {
 const UserSchema = new Mongoose.Schema({
     id: Mongoose.Schema.Types.ObjectId,
     name: String,
+    email: String,
     password: String,
     role: String
 }, { strict: false })
@@ -81,25 +82,68 @@ const deleteProject=(id)=>{
 }
 
 const createUser=(data)=>{
-    console.log('Registering User')
+    console.log('Attempting to Registering User')
 
-    const content={
-        id:new Mongoose.Types.ObjectId,
-        name:data.name,
-        //email:data.email,
-        password:data.password,
-        role:data.role
-    }
-    console.log(content)
-    return User.create(content)
+    return findUserByEmail(data.email).then(found => {
+        if(found) {
+            console.log("Error! User already exists.")
+            throw new Error('User already exists')
+        } 
+            
+        return {
+            id: new Mongoose.Types.ObjectId,
+            name: data.name,
+            email: data.email,
+            password: data.password,
+            role: data.role
+        }
+
+    }).then(user => {
+        console.log(user)
+        return User.create(user)
+    })
+    // return User.create(content)
     //User.create(content)
 }
 
 const loginUser=(user)=>{
     console.log('Logging User')
     console.log(user)
-    return User.findOne({'name':user.name, 'password':user.password})
+    return User.findOne({'email':user.email, 'password':user.password})
+        .then(found => {
+            if(!found) {
+                console.log('Invalid email/password!')
+                throw new Error('Invalid email/password!')
+            }
+            return found
+        })
 }
+
+const findUserByEmail = email => {
+    atIndex = email.indexOf('@')
+    dotIndex = email.lastIndexOf('.')
+    if(atIndex >= dotIndex) {
+        throw new Error('Invalid Email')
+    }
+    // some filtering for dup gmail tricks
+    if(email.substring(atIndex+1, dotIndex).toLowerCase() == 'gmail') {
+        preAt = email.substring(0, atIndex)
+        preAt = preAt.replace('.',"")
+        
+        plusIndex = preAt.indexOf('+')
+        if(plusIndex > -1) {
+            preAt = preAt.substring(0, plusIndex)
+        }
+
+        email = preAt + email.substring(atIndex)
+    }
+    console.log("Searching for email: " + email)
+    return User.findOne({ email: { $regex: `^${email}$`, $options: 'i' } })
+} 
+// const findUserByName = userName => User.findOne({ name: { $regex: `^${userName}$`, $options: 'i' } })
+
+
+
 // const createMessage = data => {
 //     const content = {
 //         user: data.user,
@@ -113,7 +157,6 @@ const loginUser=(user)=>{
 
 // const allMessages = () => Message.find()
 
-// const findUserByName = userName => User.findOne({ name: { $regex: `^${userName}$`, $options: 'i' } })
 
 // const loginUser = (userName, password, socketId) => {
 //     // find if the username is in the db

@@ -31,6 +31,7 @@ const registrationComponent={
         </div>   
     </div>
     <div slot="footer">
+        <p v-show="failedEmail" style="color: #fb78ad">Sorry! The email <b>{{failedEmail}}</b> already exists!</p>
         <input type="submit" @click="submit()" id="registerSubmit" @click="$emit('close')">
     </form>
     </div>
@@ -41,7 +42,6 @@ const registrationComponent={
             if(this.register.name && this.register.email && this.register.password){
                 this.register.role='User'
                 app.showRegister=false
-                app.loggedIn=true
                 socket.emit('register',this.register)
             }
             
@@ -50,7 +50,7 @@ const registrationComponent={
             app.showRegister=false
         }
     },
-    props:['register']
+    props:['register', 'failedEmail']
 }
 
 const regmodal={
@@ -73,14 +73,13 @@ const loginComponent={
         <input type="password" name="password" placeholder="Password" v-model="login.password">
     </div>
     <div slot="footer">
+        <p v-show="failedLogin" style="color: #fb78ad">Invalid Username/Password!</p>
         <input type="submit" @click="submit()" id="loginSubmit" @click="$emit('close')">
     </div>
     </modal>`,    
     methods:{
         submit: function(){
             if(this.login.name && this.login.password){
-                app.showLogin=false
-                app.loggedIn=true
                 socket.emit('login',this.login)
             }
             
@@ -89,7 +88,7 @@ const loginComponent={
             app.showLogin=false
         }
     },
-    props:['login']
+    props:['login', 'failedLogin']
 }
 
 Vue.component('modal', {
@@ -102,6 +101,8 @@ const app = new Vue({
     el: '#to-do-app',
     data: {
         user:{name:'Anonymous',role:'Guest'},
+        failedEmail: '',
+        failedLogin: false,
         loggedIn:false,
         projects:[],
         currentProject:{},
@@ -211,7 +212,23 @@ socket.on('anonymous-user',user=>{
 
 socket.on('refresh-user',user=>{
     console.log(user)
-    app.user=user
+    app.user=user   
+    if (user.role.toLowerCase() != 'guest') {
+        app.failedEmail = ''
+        app.loggedIn = true
+        app.showLogin = false
+    }
 })
+
+socket.on('failed-login', err => {
+    app.failedLogin = true
+    console.log("Failed login!")
+})
+
+socket.on('failed-register', err => {
+    app.failedEmail = err.email
+})
+
+
 //socket.on... when the server sends to the client
 //socket.emit when client sends to server
