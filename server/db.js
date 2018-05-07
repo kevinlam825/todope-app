@@ -102,6 +102,7 @@ const createUser=(data)=>{
         console.log(user)
         return User.create(user)
     })
+    
     // return User.create(content)
     //User.create(content)
 }

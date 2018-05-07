@@ -31,7 +31,7 @@ const registrationComponent={
         </div>   
     </div>
     <div slot="footer">
-        <p v-show="failedEmail" style="color: #fb78ad">Sorry! The email <b>{{failedEmail}}</b> already exists!</p>
+        <p v-if="app.failedRegister" style="color: #fb78ad">{{app.failedRegister}}</p>
         <input type="submit" @click="submit()" id="registerSubmit" @click="$emit('close')">
     </form>
     </div>
@@ -40,7 +40,6 @@ const registrationComponent={
     methods:{
         submit: function(){
             if(this.register.name && this.register.email && this.register.password && this.register.role){
-                app.showRegister=false
                 socket.emit('register',this.register)
             }
             
@@ -49,7 +48,7 @@ const registrationComponent={
             app.showRegister=false
         }
     },
-    props:['register', 'failedEmail']
+    props:['register', 'failedRegister']
 }
 
 const regmodal={
@@ -72,7 +71,7 @@ const loginComponent={
         <input type="password" name="password" placeholder="Password" v-model="login.password">
     </div>
     <div slot="footer">
-        <p v-show="failedLogin" style="color: #fb78ad">Invalid Username/Password!</p>
+        <p v-show="app.failedLogin" style="color: #fb78ad">Invalid Username/Password!</p>
         <input type="submit" @click="submit()" id="loginSubmit" @click="$emit('close')">
     </div>
     </modal>`,    
@@ -100,7 +99,7 @@ const app = new Vue({
     el: '#to-do-app',
     data: {
         user:{name:'Anonymous',role:'Guest'},
-        failedEmail: '',
+        failedRegister: '',
         failedLogin: false,
         loggedIn:false,
         projects:[],
@@ -213,7 +212,7 @@ socket.on('refresh-user',user=>{
     console.log(user)
     app.user=user   
     if (user.role.toLowerCase() != 'guest') {
-        app.failedEmail = ''
+        app.failedRegister = ''
         app.loggedIn = true
         app.showLogin = false
     }
@@ -225,7 +224,8 @@ socket.on('failed-login', err => {
 })
 
 socket.on('failed-register', err => {
-    app.failedEmail = err.email
+    console.log("Failed register! app.js: ", err)
+    app.failedRegister = err
 })
 
 

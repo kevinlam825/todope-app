@@ -137,6 +137,7 @@ module.exports = (server, db) => {
             if(data==null){
                 console.log("Error occurred while registering user")
             }
+            data.role = "User"
             db.createUser(data)
                 .then(user=>{
                     db.loginUser(user).then(user=>{
@@ -145,7 +146,8 @@ module.exports = (server, db) => {
                     })
                 })
                 .catch(err => {
-                    socket.emit('failed-register')
+                    console.log("Failed register! sockets.js: "+ err.message)
+                    socket.emit('failed-register', err.message)
                 })
         })
 
