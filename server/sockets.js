@@ -148,6 +148,7 @@ module.exports = (server, db) => {
                     console.log("Failed register! sockets.js: "+ err.message)
                     socket.emit('failed-register', err.message)
                 })
+
         })
 
         socket.on('login',data=>{

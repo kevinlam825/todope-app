@@ -84,28 +84,30 @@ const deleteProject=(id)=>{
 const createUser=(data)=>{
     console.log('Attempting to Registering User')
 
-    return findUserByEmail(data.email).then(found => {
-        if(found) {
-            console.log("Error! User already exists.")
-            throw new Error('User already exists')
-        } 
-            
-        return {
-            id: new Mongoose.Types.ObjectId,
-            name: data.name,
-            email: data.email,
-            password: data.password,
-            role: data.role
-        }
+    return findUserByEmail(data.email)
+        .then(found => {
+            if(found) {
+                console.log("Error! User already exists.")
+                return Promise.reject(new Error('User already exists'))
+            } 
+                
+            return {
+                id: new Mongoose.Types.ObjectId,
+                name: data.name,
+                email: data.email,
+                password: data.password,
+                role: data.role
+            }
 
-    }).then(user => {
-        console.log(user)
-        return User.create(user)
-    })
-    .catch(err=>{
-        console.log("error")
-        
-    })
+        })
+        .then(user => {
+            console.log(user)
+            return User.create(user)
+        })
+        .catch(err=>{
+            console.log("error")
+            return Promise.reject(err)
+        })
     
     // return User.create(content)
     //User.create(content)
@@ -127,8 +129,9 @@ const loginUser=(user)=>{
 const findUserByEmail = email => {
     atIndex = email.indexOf('@')
     dotIndex = email.lastIndexOf('.')
-    if(atIndex >= dotIndex) {
-        //throw new Error('Invalid Email')
+    if(atIndex >= dotIndex || atIndex==-1 || dotIndex==-1) {
+        console.log('Invalid email. Throwing...')
+        return Promise.reject(new Error('Invalid Email'))
     }
     // some filtering for dup gmail tricks
     if(email.substring(atIndex+1, dotIndex).toLowerCase() == 'gmail') {

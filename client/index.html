@@ -69,8 +69,8 @@
             </div>
         </div>
 
-        <reg-component v-bind:register="register" :failedEmail="failedRegister" v-if="showRegister"></reg-component>
-        <login-component v-bind:login="login" :failedRegister="failedRegister" v-if="showLogin"></login-component>
+        <reg-component v-bind:register="register" :failedRegister="failedRegister" v-if="showRegister"></reg-component>
+        <login-component v-bind:login="login" :failedLogin="failedLogin" v-if="showLogin"></login-component>
         <!-- container for grid -->
         <div class="row">
             <!-- project column -->
