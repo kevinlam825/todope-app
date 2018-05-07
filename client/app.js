@@ -40,6 +40,7 @@ const registrationComponent={
     methods:{
         submit: function(){
             if(this.register.name && this.register.email && this.register.password && this.register.role){
+                console.log(this.register.role)
                 socket.emit('register',this.register)
             }
             

@@ -137,7 +137,6 @@ module.exports = (server, db) => {
             if(data==null){
                 console.log("Error occurred while registering user")
             }
-            data.role = "User"
             db.createUser(data)
                 .then(user=>{
                     db.loginUser(user).then(user=>{
