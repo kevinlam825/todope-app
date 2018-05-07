@@ -24,7 +24,7 @@ const registrationComponent={
         <input type="password" name="password" placeholder="Password" v-model="register.password">
         <div>
         <label>Select a User Role</label>
-            <select v-model="register.role">
+            <select v-model="register.role" class="browser-default">
                 <option>Admin</option>
                 <option>User</option>
             </select>
@@ -39,8 +39,7 @@ const registrationComponent={
 
     methods:{
         submit: function(){
-            if(this.register.name && this.register.email && this.register.password){
-                this.register.role='User'
+            if(this.register.name && this.register.email && this.register.password && this.register.role){
                 app.showRegister=false
                 socket.emit('register',this.register)
             }
@@ -69,7 +68,7 @@ const loginComponent={
     <span><img @click="cancel()" @click="$emit('close')" style='float: right;' src='img/letter-x.png'></span>
     </h3>
     <div slot="body">
-        <input type="email" name="name" placeholder="email" v-model="login.name">
+        <input type="email" name="email" placeholder="email" v-model="login.email">
         <input type="password" name="password" placeholder="Password" v-model="login.password">
     </div>
     <div slot="footer">
@@ -79,7 +78,7 @@ const loginComponent={
     </modal>`,    
     methods:{
         submit: function(){
-            if(this.login.name && this.login.password){
+            if(this.login.email && this.login.password){
                 socket.emit('login',this.login)
             }
             
