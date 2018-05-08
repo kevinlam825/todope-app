@@ -68,8 +68,8 @@ const loginComponent={
     <span><img @click="cancel()" @click="$emit('close')" style='float: right;' src='img/letter-x.png'></span>
     </h3>
     <div slot="body">
-        <input type="email" name="email" placeholder="email" v-model="login.email">
-        <input type="password" name="password" placeholder="Password" v-model="login.password">
+        <input type="email" name="email" placeholder="email" v-model="login.email" @keyup.enter="submit()">
+        <input type="password" name="password" placeholder="Password" v-model="login.password" @keyup.enter="submit()">
     </div>
     <div slot="footer">
         <p v-show="app.failedLogin" style="color: #fb78ad">Invalid Username/Password!</p>
@@ -111,7 +111,14 @@ const app = new Vue({
         showRegister:false,
         showLogin:false,
         register:{},
-        login:{}
+        login:{},
+        users:[],
+        newUserName:'',
+        showUser:false,
+        selectedUserName:'',
+        selectedUserEmail:'',
+        selectedUserRole:'',
+        adminUserMode:false
     },
     methods: {
         addProject: function () {
@@ -173,6 +180,33 @@ const app = new Vue({
         submit: function(data,state){
             if(state==='register')socket.emit('register', data)
             if(state==='login')socket.emit('login',data)
+        },
+        addUser: function() {
+            // lol implement at some point?
+        },
+        selectUser: function(id) {
+            console.log('Looking for user id: ', id)
+            const selectedUser = app.users.find( user => {
+                return user._id === id;
+            });
+            if(selectedUser!=null){
+                app.selectedUserName = selectedUser.name
+                app.selectedUserEmail = selectedUser.email
+                app.selectedUserRole = selectedUser.role
+                app.showUser = true
+                M.updateTextFields()
+            } else {
+                console.log('Invalid User ID!')
+            }
+        },
+        toggleUsersEditor: function() {
+            if(!app.adminUserMode) {
+                app.adminUserMode = true
+                socket.emit('open-users-list')
+            } else {
+                app.adminUserMode = false
+            }
+
         }
     },
     components: {
@@ -228,6 +262,11 @@ socket.on('failed-login', err => {
 socket.on('failed-register', err => {
     console.log("Failed register! app.js: ", err)
     app.failedRegister = err
+})
+
+socket.on('refresh-users-list', users => {
+    console.log('Refreshing users list', users)
+    app.users = users
 })
 
 

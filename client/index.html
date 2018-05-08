@@ -16,6 +16,8 @@
     <!-- import animatae.css -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css" rel="stylesheet">
 
+
+
     <style>
         [v-cloak] {
             display: none;
@@ -61,79 +63,147 @@
 <body>
     <div id="to-do-app">
         <!-- nav bar-->
-        <div class="nav-bar">
-            <button v-if='loggedIn' class='dash-button' @click='logout()'>Logout</button>
-            <div v-else>
-                <button class='dash-button' @click="showLogin=true">Login</button>
-                <button class='dash-button' @click="showRegister=true">Register</button>
+        <nav>
+            <div class="nav-wrapper indigo darken-1">
+                <ul class="right"> 
+                    <li v-bind:class="{ 'active': !!adminUserMode }"><a v-if="user.role == 'Admin'" @click='toggleUsersEditor()'>User Editor</a></li>
+                    <li v-if='loggedIn'><a @click='logout()'>Logout</a></li>
+                    <div v-else>
+                        <li><a @click="showLogin=true">Login</a></li>
+                        <li><a @click="showRegister=true">Register</a></li>
+                    </div>
+                </ul>
             </div>
-        </div>
+        </nav>
 
         <reg-component v-bind:register="register" :failedRegister="failedRegister" v-if="showRegister"></reg-component>
         <login-component v-bind:login="login" :failedLogin="failedLogin" v-if="showLogin"></login-component>
         <!-- container for grid -->
         <div class="row">
-            <!-- project column -->
-            <div class="col s3">
-                <h5 v-if="(user.role != 'Guest')">{{user.name}}'s projects</h5>
-                <h5 v-else>Projects</h5>
+            <!-- default view (projects/todos) -->
+            <div v-if="user.role!='Admin' || !adminUserMode">
+                <!-- project column -->
+                <div class="col s3">
+                    <h5 v-if="(user.role != 'Guest')">{{user.name}}'s projects</h5>
+                    <h5 v-else>Projects</h5>
 
-                <div v-if="(user.role != 'Guest')">
-                    <input v-on:keydown.enter="addProject()" type="text" v-model="newProjectName" placeholder='Add New Project'>
+                    <div v-if="(user.role != 'Guest')">
+                        <input v-on:keydown.enter="addProject()" type="text" v-model="newProjectName" placeholder='Add New Project'>
+                    </div>
+
+                    <div class="collection" v-for='project in projects'>
+                        <a class="collection-item blue lighten-2 white-text" v-on:click='selectProject(project.id)'>{{project.name}}</a>
+                    </div>
+
+
                 </div>
-
-                <div class="collection" v-for='project in projects'>
-                    <a class="collection-item blue lighten-2 white-text" v-on:click='selectProject(project.id)'>{{project.name}}</a>
+                <!-- To Dos column-->
+                <div class="col s9" v-show='showProject'>
+                    <h3>{{currentProject.name}}</h3>
+                    <table>
+                        <thead>
+                            <td>Task</td>
+                            <td>Completed</td>
+                            <td v-if="(user.role=='Admin')"> Delete</td>
+                        </thead>
+                        <tr v-for='todo in currentProject.toDoList'>
+                            <td>
+                                <label>
+                                    {{todo.name}}
+                                </label>
+                            </td>
+                            <td>
+                                <label>
+                                    <input type="checkbox" class="filled-in" v-model="todo.completed" v-on:click='completeToDo(todo._id)' :disabled="(user.role == 'Guest')">
+                                    <span></span>
+                                </label>
+                            </td>
+                            <td>
+                                <a class="btn-floating red" v-on:click='deleteToDo(todo._id)' v-if="(user.role=='Admin')">
+                                    <i class="material-icons">delete_forever</i>
+                                </a>
+                            </td>
+                        </tr>
+                    </table>
+                    <!-- buttons on bottom -->
+                    <div v-if="(user.role != 'Guest')">
+                        <input v-on:keydown.enter="addToDo()" type="text" v-model="newToDoDesc" placeholder='New Task'>
+                        <a class="waves-effect waves-light btn green" v-on:click='addToDo()'>
+                            <i class="material-icons right">add_circle_outline</i>Add</a>
+                        <a class="waves-effect waves-light btn deep-orange accent-4" v-on:click='removeCompletedToDos()' v-if="(user.role!='Guest')">
+                            <i class="material-icons right">cancel</i>Clear Completed Tasks</a>
+                        <a class="right waves-effect waves-light btn red" v-on:click='deleteProject(currentProject._id)' v-if="(user.role=='Admin')">
+                            <i class="material-icons right">warning</i>Delete Project</a>
+                    </div>
                 </div>
-
-
             </div>
-            <!-- To Dos column-->
-            <div class="col s9" v-show='showProject'>
-                <h3>{{currentProject.name}}</h3>
-                <table>
-                    <thead>
-                        <td>Task</td>
-                        <td>Completed</td>
-                        <td v-if="(user.role=='Admin')"> Delete</td>
-                    </thead>
-                    <tr v-for='todo in currentProject.toDoList'>
-                        <td>
-                            <label>
-                                {{todo.name}}
-                            </label>
-                        </td>
-                        <td>
-                            <label>
-                                <input type="checkbox" class="filled-in" v-model="todo.completed" v-on:click='completeToDo(todo._id)' :disabled="(user.role == 'Guest')">
-                                <span></span>
-                            </label>
-                        </td>
-                        <td>
-                            <a class="btn-floating red" v-on:click='deleteToDo(todo._id)' v-if="(user.role=='Admin')">
-                                <i class="material-icons">delete_forever</i>
-                            </a>
-                        </td>
-                    </tr>
-                </table>
-                <!-- buttons on bottom -->
-                <div v-if="(user.role != 'Guest')">
-                    <input v-on:keydown.enter="addToDo()" type="text" v-model="newToDoDesc" placeholder='New Task'>
-                    <a class="waves-effect waves-light btn green" v-on:click='addToDo()'>
-                        <i class="material-icons right">add_circle_outline</i>Add</a>
-                    <a class="waves-effect waves-light btn deep-orange accent-4" v-on:click='removeCompletedToDos()' v-if="(user.role!='Guest')">
-                        <i class="material-icons right">cancel</i>Clear Completed Tasks</a>
-                    <a class="right waves-effect waves-light btn red" v-on:click='deleteProject(currentProject._id)' v-if="(user.role=='Admin')">
-                        <i class="material-icons right">warning</i>Delete Project</a>
-                </div>
+            <div v-else>
+                <!-- START ADMIN USER LIST -->
+                <!-- User List column -->
+                <div class="col s3">
+                    <h5>Users</h5>
 
+                    <div>
+                        <input v-on:keydown.enter="addUser()" type="text" v-model="newUserName" placeholder='Add New User'>
+                    </div>
+
+                    <div class="collection" v-for='user in users'>
+                        <a class="collection-item blue lighten-2 white-text" v-on:click='selectUser(user._id)'>{{user.name}} | {{user.email}}</a>
+                    </div>
+
+
+                </div>
+                <!-- User Detail column-->
+                <div class="col s9" v-show='showUser'>
+                    <h3>Editing User: {{selectedUserName}} | {{selectedUserEmail}}</h3>
+                    <div class="row">
+                        <form class="col s12">
+                            <div class="row">
+                                <div class="input-field col s6">
+                                    <input v-model="selectedUserName" id="selected_user_name" type="text" class="validate">
+                                    <label class="active" for="selected_user_name">Username</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="input-field col s6">
+                                    <input v-model="selectedUserEmail" id="e-mail" type="text" class="validate">
+                                    <label class="active" for="e-mail">E-Mail</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="input-field col s6">
+                                    <select id="selected_user_role" v-model="selectedUserRole" class="browser-default">
+                                        <option value="" disabled>User Role</option>
+                                        <option value="User">User</option>
+                                        <option value="Admin">Admin</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="input-field col s6">
+                                    <a class="waves-effect waves-yellow btn-small">Reset Password</a>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="input-field col s6">
+                                    <a class="waves-effect waves-light btn right-align">
+                                        <i class="material-icons left">save</i>Save</a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <!-- END ADMIN USER LIST -->
             </div>
+
         </div>
     </div>
 
     <script type="text/javascript" src="https://unpkg.com/vue@2.5.15/dist/vue.min.js"></script>
     <script type="text/javascript" src="https://unpkg.com/socket.io-client@2.1.0/dist/socket.io.js"></script>
     <script type="text/javascript" src="app.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
+
 </body>
 
 </html>

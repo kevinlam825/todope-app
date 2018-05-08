@@ -148,6 +148,12 @@ const findUserByEmail = email => {
     console.log("Searching for email: " + email)
     return User.findOne({ email: { $regex: `^${email}$`, $options: 'i' } })
 } 
+
+const getUsersList = () => User.find({},'name email role')
+
+
+
+
 // const findUserByName = userName => User.findOne({ name: { $regex: `^${userName}$`, $options: 'i' } })
 
 
@@ -225,7 +231,8 @@ module.exports = {
     saveProject,
     deleteProject,
     createUser,
-    loginUser
+    loginUser,
+    getUsersList
     // activeUsers,
     // allMessages,
     // createUser,

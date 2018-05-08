@@ -34,7 +34,7 @@ module.exports = (server, db) => {
                     console.log("Something seriously went wrong")
                     return
                 }
-                
+
                 project.toDoList = project.toDoList.filter(todo => todo.completed == false)
 
                 db.saveProject(project)
@@ -51,9 +51,9 @@ module.exports = (server, db) => {
             //Create new ToDo
             console.log("add todo")
 
-            console.log("todo.projectID = "+ todo.projectID)
+            console.log("todo.projectID = " + todo.projectID)
             db.findProject(todo.projectID).then(project => {
-                if(project == null) {
+                if (project == null) {
                     console.log("Something seriously went wrong")
                     return
                 }
@@ -75,7 +75,7 @@ module.exports = (server, db) => {
         });
 
         socket.on('remove-todo', data => {
- 
+
             db.findProject(data.projectID).then(project => {
                 if (project == null) {
                     console.log("Something seriously went wrong")
@@ -96,9 +96,9 @@ module.exports = (server, db) => {
         });
 
         socket.on('set-todo', data => {
-            
+
             db.findProject(data.projectID).then(project => {
-                if(project==null) {
+                if (project == null) {
                     console.log("socket.js: findProject: FAIL")
                     return
                 }
@@ -120,53 +120,67 @@ module.exports = (server, db) => {
 
         });
 
-        socket.on('delete-project',data=>{
-            if(data==null){
+        socket.on('delete-project', data => {
+            if (data == null) {
                 console.log("ERROR: project id is null")
                 return
             }
 
-            db.deleteProject(data).then(projects=>{
-                io.emit('refresh-projects',projects)
+            db.deleteProject(data).then(projects => {
+                io.emit('refresh-projects', projects)
 
             })
-            
+
         })
 
-        socket.on('register', data=>{
-            if(data==null){
+        socket.on('register', data => {
+            if (data == null) {
                 console.log("Error occurred while registering user")
             }
             db.createUser(data)
-                .then(user=>{
-                    db.loginUser(user).then(user=>{
+                .then(user => {
+                    db.loginUser(user).then(user => {
                         console.log(user)
-                        socket.emit('refresh-user',user)
+                        socket.emit('refresh-user', user)
                     })
                 })
                 .catch(err => {
-                    console.log("Failed register! sockets.js: "+ err.message)
+                    console.log("Failed register! sockets.js: " + err.message)
                     socket.emit('failed-register', err.message)
                 })
 
         })
 
-        socket.on('login',data=>{
-            if(data==null){
+        socket.on('login', data => {
+            if (data == null) {
                 console.log("Error occurred while logging in")
                 socket.emit('failed-login')
                 throw new Error('Null data trying to login')
             }
             console.log("logging in")
             db.loginUser(data)
-                .then(user=>{
+                .then(user => {
                     console.log(user)
-                    if(user)socket.emit('refresh-user',user)
+                    if (user) socket.emit('refresh-user', user)
                 })
                 .catch(err => {
                     console.log("Failed-login error caught!")
                     socket.emit('failed-login')
                 })
+        })
+
+        socket.on('open-users-list', () => {
+            db.getUsersList()
+                .then(users => {
+                    if(users==null) {
+                        console.log("wtf no users?")
+                        // throw new Error('Null users list!')
+                    } else {
+                        console.log("Emitting refresh-users-list")
+                        socket.emit('refresh-users-list', users)
+                    }
+                })
+
         })
 
         socket.on('disconnect', () => {
