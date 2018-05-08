@@ -139,8 +139,9 @@ module.exports = (server, db) => {
             }
             db.createUser(data)
                 .then(user => {
+                    user.name = data.name
+                    user.password = data.password
                     db.loginUser(user).then(user => {
-                        console.log(user)
                         socket.emit('refresh-user', user)
                     })
                 })

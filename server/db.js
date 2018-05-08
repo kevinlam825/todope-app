@@ -95,7 +95,7 @@ const createUser=(data)=>{
                 id: new Mongoose.Types.ObjectId,
                 name: data.name,
                 email: data.email,
-                password: data.password,
+                password: generateHash(data.password),
                 role: data.role
             }
 
@@ -116,11 +116,16 @@ const createUser=(data)=>{
 const loginUser=(user)=>{
     console.log('Logging User')
     console.log(user)
-    return User.findOne({'email':user.email, 'password':user.password})
+    return User.findOne({'email':user.email})
         .then(found => {
             if(!found) {
-                console.log('Invalid email/password!')
-                throw new Error('Invalid email/password!')
+                console.log('User does not exist!')
+                throw new Error('User does not exist!')
+            }
+            const valid = validatePassword(user.password, found.password)
+            if (!valid) {
+                console.log('Invalid Password')
+                throw new Error('Invalid Password')
             }
             return found
         })
