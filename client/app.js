@@ -90,6 +90,20 @@ const loginComponent={
     props:['login', 'failedLogin']
 }
 
+const landingPageComponent = {
+    template: 
+    `<div id='landing-page' class='landing-container'> 
+        <div class='title-container'>
+            <h2 class='title'>ToDope</h2>
+            <h4 class='description'>The dopest ToDo App by the dopest developers</h4>
+        </div>
+    </div>`,
+    created:particlesJS.load('landing-page', 'particles.json', function() {
+        console.log('callback - particles.js config loaded');
+      })
+
+}
+
 Vue.component('modal', {
     template: '#modal-template'
   })
@@ -212,7 +226,8 @@ const app = new Vue({
     components: {
         'nav-component':navBarComponent,
         'reg-component':registrationComponent,
-        'login-component':loginComponent
+        'login-component':loginComponent,
+        'landing-page-component':landingPageComponent
     }
 });
 
