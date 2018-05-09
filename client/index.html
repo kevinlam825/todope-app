@@ -63,7 +63,9 @@
         <!-- nav bar-->
         <nav>
             <div class="nav-wrapper indigo darken-1">
+                <a href="#" class="brand-logo">ToDope</a>
                 <ul class="right"> 
+                    <li v-if='loggedIn'>Welcome, {{user.name}}</li>
                     <li v-bind:class="{ 'active': !!adminUserMode }"><a v-if="user.role == 'Admin'" @click='toggleUsersEditor()'>User Editor</a></li>
                     <li v-if='loggedIn'><a @click='logout()'>Logout</a></li>
                     <div v-else>

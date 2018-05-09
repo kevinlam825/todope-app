@@ -1,14 +1,4 @@
 // Components
-//Bar for the top of the page. Contains login/logout/register and an admin page
-
-const navBarComponent={
-    template: ` <div class="nav-bar">
-                    <button v-if='loggedIn' type='button' v-on:click='login()'>Login</button>
-                    <button v-else type='button' v-on:click='logout()'>Logout</button>
-                </div>`,
-    props:['user']
-}
-
 const registrationComponent={
     template: 
     `
@@ -228,7 +218,6 @@ const app = new Vue({
         }
     },
     components: {
-        'nav-component':navBarComponent,
         'reg-component':registrationComponent,
         'login-component':loginComponent,
         'landing-page-component':landingPageComponent
