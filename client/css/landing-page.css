@@ -1,0 +1,10 @@
+.landing-container {
+    height:90vh;
+    width:100%;
+
+}
+.title-container {
+    position: absolute;
+    top: 25%;
+    left:25%;
+}

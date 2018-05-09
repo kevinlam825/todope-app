@@ -13,11 +13,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
     <!-- Import custom css -->
     <link rel="stylesheet" href="css/style.css">
-    <!-- import animatae.css -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css" rel="stylesheet">
-
-
-
+    <link rel="stylesheet" href="css/landing-page.css">
+    <!-- import particles.css -->
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.js"></script>    
     <style>
         [v-cloak] {
             display: none;
@@ -27,7 +25,7 @@
 
 
 </head>
-
+<!-- modal script -->
 <script type="text/x-template" id="modal-template">
     <transition name="modal">
         <div class="modal-mask">
@@ -65,7 +63,9 @@
         <!-- nav bar-->
         <nav>
             <div class="nav-wrapper indigo darken-1">
+                <a href="#" class="brand-logo">ToDope</a>
                 <ul class="right"> 
+                    <li v-if='loggedIn'>Welcome, {{user.name}}</li>
                     <li v-bind:class="{ 'active': !!adminUserMode }"><a v-if="user.role == 'Admin'" @click='toggleUsersEditor()'>User Editor</a></li>
                     <li v-if='loggedIn'><a @click='logout()'>Logout</a></li>
                     <div v-else>
@@ -75,11 +75,13 @@
                 </ul>
             </div>
         </nav>
-
+        <!-- modals -->
         <reg-component v-bind:register="register" :failedRegister="failedRegister" v-if="showRegister"></reg-component>
         <login-component v-bind:login="login" :failedLogin="failedLogin" v-if="showLogin"></login-component>
+        <!-- landing page -->
+        <landing-page-component v-show='!loggedIn'></landing-page-component>
         <!-- container for grid -->
-        <div class="row">
+        <div v-if='loggedIn' class="row">
             <!-- default view (projects/todos) -->
             <div v-if="user.role!='Admin' || !adminUserMode">
                 <!-- project column -->
@@ -94,8 +96,6 @@
                     <div class="collection" v-for='project in projects'>
                         <a class="collection-item blue lighten-2 white-text" v-on:click='selectProject(project.id)'>{{project.name}}</a>
                     </div>
-
-
                 </div>
                 <!-- To Dos column-->
                 <div class="col s9" v-show='showProject'>
@@ -137,6 +137,7 @@
                     </div>
                 </div>
             </div>
+            <!-- if user is an admin -->
             <div v-else>
                 <!-- START ADMIN USER LIST -->
                 <!-- User List column -->
