@@ -32,7 +32,9 @@ const registrationComponent={
     </div>
     <div slot="footer">
         <p v-if="app.failedRegister" style="color: #fb78ad">{{app.failedRegister}}</p>
-        <input type="submit" @click="submit()" id="registerSubmit">
+        <button @click="submit()" class="btn waves-effect waves-light" type="submit" name="action">Submit
+        <i class="material-icons right">send</i>
+        </button>
     </form>
     </div>
     </modal>`,
@@ -73,7 +75,9 @@ const loginComponent={
     </div>
     <div slot="footer">
         <p v-show="app.failedLogin" style="color: #fb78ad">Invalid Username/Password!</p>
-        <input type="submit" @click="submit()" id="loginSubmit">
+        <button @click="submit()" class="btn waves-effect waves-light" type="submit" name="action">Submit
+        <i class="material-icons right">send</i>
+        </button>
     </div>
     </modal>`,    
     methods:{
