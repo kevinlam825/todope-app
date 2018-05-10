@@ -132,7 +132,7 @@
                         <input v-on:keydown.enter="addToDo()" type="text" v-model="newToDoDesc" placeholder='New Task'>
                         <a class="waves-effect waves-light btn green" v-on:click='addToDo()'>
                             <i class="material-icons right">add_circle_outline</i>Add</a>
-                        <a class="waves-effect waves-light btn deep-orange accent-4" v-on:click='removeCompletedToDos()' v-if="(user.role!='Guest')">
+                        <a class="waves-effect waves-light btn deep-orange accent-4" v-on:click='removeCompletedToDos()' v-if="(user.role!='Guest' && currentProject.toDoList.length)">
                             <i class="material-icons right">cancel</i>Clear Completed Tasks</a>
                         <a class="right waves-effect waves-light btn red" v-on:click='deleteProject(currentProject._id)' v-if="(user.role=='Admin')">
                             <i class="material-icons right">warning</i>Delete Project</a>
