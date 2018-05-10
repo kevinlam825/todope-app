@@ -182,6 +182,7 @@ const app = new Vue({
         },
         logout: function(){
             console.log("LOGOUT USER")
+            location.reload();
             app.loggedIn=false
             app.user={name:'Anonymous',role:'Guest'}
         },

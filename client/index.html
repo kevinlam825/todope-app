@@ -66,7 +66,10 @@
                 <a href="#" class="brand-logo">ToDope</a>
                 <ul class="right"> 
                     <li v-if='loggedIn'>Welcome, {{user.name}}</li>
-                    <li v-bind:class="{ 'active': !!adminUserMode }"><a v-if="user.role == 'Admin'" @click='toggleUsersEditor()'>User Editor</a></li>
+                    <li v-bind:class="{ 'active': !!adminUserMode }">
+                        <a v-if="user.role == 'Admin' && !adminUserMode" @click='toggleUsersEditor()'>User Editor</a>
+                        <a v-if="user.role == 'Admin' && adminUserMode" @click='toggleUsersEditor()'>Project Editor</a>
+                    </li>
                     <li v-if='loggedIn'><a @click='logout()'>Logout</a></li>
                     <div v-else>
                         <li><a @click="showLogin=true">Login</a></li>
@@ -81,13 +84,12 @@
         <!-- landing page -->
         <landing-page-component v-show='!loggedIn'></landing-page-component>
         <!-- container for grid -->
-        <div v-if='loggedIn' class="row">
+        <div v-if='loggedIn'>
             <!-- default view (projects/todos) -->
-            <div v-if="user.role!='Admin' || !adminUserMode">
+            <div class="row" v-if="user.role!='Admin' || !adminUserMode">
                 <!-- project column -->
-                <div class="col s3">
-                    <h5 v-if="(user.role != 'Guest')">{{user.name}}'s projects</h5>
-                    <h5 v-else>Projects</h5>
+                <div class="col s12 l3">
+                    <h5>Projects</h5>
 
                     <div v-if="(user.role != 'Guest')">
                         <input v-on:keydown.enter="addProject()" type="text" v-model="newProjectName" placeholder='Add New Project'>
@@ -98,10 +100,10 @@
                     </div>
                 </div>
                 <!-- To Dos column-->
-                <div class="col s9" v-show='showProject'>
+                <div class="col s12 l9" v-if='showProject'>
                     <h3>{{currentProject.name}}</h3>
                     <table>
-                        <thead>
+                        <thead v-if='currentProject.toDoList.length'>
                             <td>Task</td>
                             <td>Completed</td>
                             <td v-if="(user.role=='Admin')"> Delete</td>
@@ -130,7 +132,7 @@
                         <input v-on:keydown.enter="addToDo()" type="text" v-model="newToDoDesc" placeholder='New Task'>
                         <a class="waves-effect waves-light btn green" v-on:click='addToDo()'>
                             <i class="material-icons right">add_circle_outline</i>Add</a>
-                        <a class="waves-effect waves-light btn deep-orange accent-4" v-on:click='removeCompletedToDos()' v-if="(user.role!='Guest')">
+                        <a class="waves-effect waves-light btn deep-orange accent-4" v-on:click='removeCompletedToDos()' v-if="(user.role!='Guest' && currentProject.toDoList.length)">
                             <i class="material-icons right">cancel</i>Clear Completed Tasks</a>
                         <a class="right waves-effect waves-light btn red" v-on:click='deleteProject(currentProject._id)' v-if="(user.role=='Admin')">
                             <i class="material-icons right">warning</i>Delete Project</a>
@@ -138,10 +140,10 @@
                 </div>
             </div>
             <!-- if user is an admin -->
-            <div v-else>
+            <div class="row" v-else>
                 <!-- START ADMIN USER LIST -->
                 <!-- User List column -->
-                <div class="col s3">
+                <div class="col s12 l3"> 
                     <h5>Users</h5>
 
                     <div>
@@ -155,7 +157,7 @@
 
                 </div>
                 <!-- User Detail column-->
-                <div class="col s9" v-show='showUser'>
+                <div class="col s12 l9" v-show='showUser'>
                     <h3>Editing User: {{selectedUserName}} | {{selectedUserEmail}}</h3>
                     <div class="row">
                         <form class="col s12">
