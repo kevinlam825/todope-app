@@ -69,7 +69,6 @@
                     <li v-bind:class="{ 'active': !!adminUserMode }">
                         <a v-if="user.role == 'Admin' && !adminUserMode" @click='toggleUsersEditor()'>User Editor</a>
                         <a v-if="user.role == 'Admin' && adminUserMode" @click='toggleUsersEditor()'>Project Editor</a>
-
                     </li>
                     <li v-if='loggedIn'><a @click='logout()'>Logout</a></li>
                     <div v-else>
