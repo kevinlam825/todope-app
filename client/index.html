@@ -100,10 +100,10 @@
                     </div>
                 </div>
                 <!-- To Dos column-->
-                <div class="col s12 l9" v-show='showProject'>
+                <div class="col s12 l9" v-if='showProject'>
                     <h3>{{currentProject.name}}</h3>
                     <table>
-                        <thead>
+                        <thead v-if='currentProject.toDoList.length'>
                             <td>Task</td>
                             <td>Completed</td>
                             <td v-if="(user.role=='Admin')"> Delete</td>
