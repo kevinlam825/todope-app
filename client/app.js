@@ -244,8 +244,8 @@ socket.on('refresh-projects', projects => {
     console.log(projects)
 });
 
-socket.on('send-current-project', currentProject => {
-    app.currentProject = currentProject
+socket.on('check-current-project', currentProject => {
+    if(app.currentProject._id == currentProject) app.showProject = false
 });
 
 socket.on('anonymous-user',user=>{

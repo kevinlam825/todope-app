@@ -126,6 +126,8 @@ module.exports = (server, db) => {
                 return
             }
 
+            io.emit('check-current-project', data)
+
             db.deleteProject(data).then(projects => {
                 io.emit('refresh-projects', projects)
 
