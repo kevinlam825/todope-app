@@ -96,7 +96,7 @@
                     </div>
 
                     <div class="collection" v-for='project in projects'>
-                        <a class="collection-item blue lighten-2 white-text" v-on:click='selectProject(project.id)'>{{project.name}}</a>
+                        <a class="collection-item blue white-text" v-on:click='selectProject(project.id)' :class="{ 'lighten-4': app.currentProject.id==project.id, 'lighten-1': app.currentProject.id!=project.id }">{{project.name}}</a>
                     </div>
                 </div>
                 <!-- To Dos column-->
@@ -151,7 +151,7 @@
                     </div>
 
                     <div class="collection" v-for='user in users'>
-                        <a class="collection-item blue lighten-2 white-text" v-on:click='selectUser(user._id)'>{{user.name}} | {{user.email}}</a>
+                        <a class="collection-item blue white-text" v-on:click='selectUser(user._id)' :class="{ 'lighten-4': app.selectedUserId==user._id, 'lighten-1': app.selectedUserId!=user._id }">{{user.name}} | {{user.email}}</a>
                     </div>
 
 
