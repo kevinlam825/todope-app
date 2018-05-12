@@ -65,7 +65,7 @@
             <div class="nav-wrapper indigo darken-1">
                 <a href="#" class="brand-logo" style="padding-left: 1em;">ToDope</a>
                 <ul class="right"> 
-                    <li v-if='loggedIn'>Welcome, {{user.name}}</li>
+                    <li v-if='loggedIn' style="margin-right: 15px">Welcome, {{user.name}}</li>
                     <li v-bind:class="{ 'active': !!adminUserMode }">
                         <a v-if="user.role == 'Admin' && !adminUserMode" @click='toggleUsersEditor()'>User Editor</a>
                         <a v-if="user.role == 'Admin' && adminUserMode" @click='toggleUsersEditor()'>Project Editor</a>
@@ -145,10 +145,6 @@
                 <!-- User List column -->
                 <div class="col s12 l3"> 
                     <h5>Users</h5>
-
-                    <div>
-                        <input v-on:keydown.enter="addUser()" type="text" v-model="newUserName" placeholder='Add New User'>
-                    </div>
 
                     <div class="collection" v-for='user in users'>
                         <a class="collection-item blue white-text" v-on:click='selectUser(user._id)' :class="{ 'lighten-4': app.selectedUserId==user._id, 'lighten-1': app.selectedUserId!=user._id }">{{user.name}} | {{user.email}}</a>
