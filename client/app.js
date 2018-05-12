@@ -123,6 +123,7 @@ const app = new Vue({
         users:[],
         newUserName:'',
         showUser:false,
+        selectedUserNameAndEmailString:'',
         selectedUserName:'',
         selectedUserEmail:'',
         selectedUserRole:'',
@@ -192,6 +193,10 @@ const app = new Vue({
         },
         addUser: function() {
             // lol implement at some point?
+            
+        },
+        updateSelectedUser: function() {
+            socket.emit('update-selected-user', {id:app.selectedUserId, name:app.selectedUserName, email:app.selectedUserEmail, role:app.selectedUserRole})
         },
         selectUser: function(id) {
             console.log('Looking for user id: ', id)
@@ -199,9 +204,11 @@ const app = new Vue({
                 return user._id === id;
             });
             if(selectedUser!=null){
+                app.selectedUserId = selectedUser._id
                 app.selectedUserName = selectedUser.name
                 app.selectedUserEmail = selectedUser.email
                 app.selectedUserRole = selectedUser.role
+                app.selectedUserNameAndEmailString = app.selectedUserName + ' | ' + app.selectedUserEmail
                 app.showUser = true
                 M.updateTextFields()
             } else {
@@ -274,8 +281,13 @@ socket.on('failed-register', err => {
 })
 
 socket.on('refresh-users-list', users => {
-    console.log('Refreshing users list', users)
-    app.users = users
+    if(app.user.role!='Admin') {
+        console.log('Not admin so not refreshing users-list changes from other users.')
+    } else {
+        console.log('Refreshing users list', users)
+        app.users = users
+        app.selectedUserNameAndEmailString = app.selectedUserName + ' | ' + app.selectedUserEmail
+    }
 })
 
 

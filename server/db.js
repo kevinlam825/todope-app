@@ -156,6 +156,14 @@ const findUserByEmail = email => {
 
 const getUsersList = () => User.find({},'name email role')
 
+const updateUser = (id, changes) => {
+    console.log("Changes obj: ", changes,"END CHANGESOBJ")
+    // return User.findByIdAndUpdate(id, {$set: {changes}}, {"fields": {"name":1, "email":1, "role":1, "new":true}})
+    return User.findByIdAndUpdate(id, changes , { "new": true })
+
+    // return User.update({_id:id})
+}
+
 
 
 
@@ -237,7 +245,8 @@ module.exports = {
     deleteProject,
     createUser,
     loginUser,
-    getUsersList
+    getUsersList,
+    updateUser
     // activeUsers,
     // allMessages,
     // createUser,

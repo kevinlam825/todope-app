@@ -139,7 +139,7 @@
                     </div>
                 </div>
             </div>
-            <!-- if user is an admin -->
+            <!-- if user is an admin AND selected edit-users mode -->
             <div class="row" v-else>
                 <!-- START ADMIN USER LIST -->
                 <!-- User List column -->
@@ -158,7 +158,7 @@
                 </div>
                 <!-- User Detail column-->
                 <div class="col s12 l9" v-show='showUser'>
-                    <h3>Editing User: {{selectedUserName}} | {{selectedUserEmail}}</h3>
+                    <h3>Editing User: {{selectedUserNameAndEmailString}}</h3>
                     <div class="row">
                         <form class="col s12">
                             <div class="row">
@@ -175,7 +175,7 @@
                             </div>
                             <div class="row">
                                 <div class="input-field col s6">
-                                    <select id="selected_user_role" v-model="selectedUserRole" class="browser-default">
+                                    <select v-model="selectedUserRole" id="selected_user_role" class="browser-default">
                                         <option value="" disabled>User Role</option>
                                         <option value="User">User</option>
                                         <option value="Admin">Admin</option>
@@ -189,8 +189,7 @@
                             </div>
                             <div class="row">
                                 <div class="input-field col s6">
-                                    <a class="waves-effect waves-light btn right-align">
-                                        <i class="material-icons left">save</i>Save</a>
+                                    <a @click='updateSelectedUser()' class="waves-effect waves-light btn right-align"><i class="material-icons left">save</i>Save</a>
                                 </div>
                             </div>
                         </form>

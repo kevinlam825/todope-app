@@ -173,9 +173,36 @@ module.exports = (server, db) => {
         })
 
         socket.on('open-users-list', () => {
+            refreshUsersList()
+
+        })
+
+        socket.on('update-selected-user', (input) => {
+            const { id:updatedUserId, ...changes } = input
+            console.log("Trying to update-selected-user in sockets.js")
+            console.log("Selected ID: ", updatedUserId)
+            console.log("Changes: ", changes)
+            db.updateUser(updatedUserId, changes)
+                .then(res => {
+                    if(res==null)
+                        Promise.reject(new Error('Failed updating user'))
+                    else {
+                        console.log("Successfully updated User", updatedUserId, " with ", changes)
+                        refreshUsersList()
+                    }
+                })
+                .catch(err => {
+                    console.log("sockets.js update-selected-user  Error!", err)
+                })
+        })
+
+        socket.on('disconnect', () => {
+        })
+
+        const refreshUsersList = () => {
             db.getUsersList()
                 .then(users => {
-                    if(users==null) {
+                    if (users == null) {
                         console.log("wtf no users?")
                         // throw new Error('Null users list!')
                     } else {
@@ -183,10 +210,8 @@ module.exports = (server, db) => {
                         socket.emit('refresh-users-list', users)
                     }
                 })
-
-        })
-
-        socket.on('disconnect', () => {
-        })
+        }
     })
+    
+
 }
