@@ -44,14 +44,6 @@ const registrationComponent={
     props:['register', 'failedRegister']
 }
 
-const regmodal={
-    template: ''
-}
-
-const adminComponent={
-
-}
-
 const loginComponent={
     template: 
     `
@@ -191,10 +183,6 @@ const app = new Vue({
             if(state==='register')socket.emit('register', data)
             if(state==='login')socket.emit('login',data)
         },
-        addUser: function() {
-            // lol implement at some point?
-            
-        },
         updateSelectedUser: function() {
             socket.emit('update-selected-user', {id:app.selectedUserId, name:app.selectedUserName, email:app.selectedUserEmail, role:app.selectedUserRole})
         },
@@ -210,6 +198,7 @@ const app = new Vue({
                 app.selectedUserRole = selectedUser.role
                 app.selectedUserNameAndEmailString = app.selectedUserName + ' | ' + app.selectedUserEmail
                 app.showUser = true
+                // M.updateTextFields()
                 this.$nextTick().then(()=>{ M.updateTextFields()}) // refresh Materialize text fields so labels don't overlap
             } else {
                 console.log('Invalid User ID!')
