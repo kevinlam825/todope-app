@@ -40,7 +40,7 @@ module.exports = (server, db) => {
                 db.saveProject(project)
                     .then(_ => {
                         db.getAllProjects().then(projects => {
-                            console.log("removing all compelted todos, about to call refresh-projects")
+                            console.log("removing all completed todos, about to call refresh-projects")
                             io.emit('refresh-projects', projects)
                             console.log(projects)
                         })
@@ -120,15 +120,15 @@ module.exports = (server, db) => {
 
         });
 
-        socket.on('delete-project', data => {
-            if (data == null) {
+        socket.on('delete-project', projectID => {
+            if (projectID == null) {
                 console.log("ERROR: project id is null")
                 return
             }
 
-            io.emit('check-current-project', data)
+            io.emit('check-current-project', projectID)
 
-            db.deleteProject(data).then(projects => {
+            db.deleteProject(projectID).then(projects => {
                 io.emit('refresh-projects', projects)
 
             })
