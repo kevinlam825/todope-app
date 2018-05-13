@@ -210,7 +210,7 @@ const app = new Vue({
                 app.selectedUserRole = selectedUser.role
                 app.selectedUserNameAndEmailString = app.selectedUserName + ' | ' + app.selectedUserEmail
                 app.showUser = true
-                M.updateTextFields()
+                this.$nextTick().then(()=>{ M.updateTextFields()}) // refresh Materialize text fields so labels don't overlap
             } else {
                 console.log('Invalid User ID!')
             }
