@@ -125,7 +125,6 @@ const app = new Vue({
         addProject: function () {
             console.log(app.newProjectName)
             socket.emit('add-project',app.newProjectName)
-            // send project and add it to the list || db
             app.newProjectName = ''
         },
         deleteProject: function(id){
@@ -163,8 +162,6 @@ const app = new Vue({
             socket.emit('remove-todo', { projectID: app.currentProject.id, todoID: id })
         },
         completeToDo: function(id) {
-            //need to figure out why the checkbox wont show in the table
-
             console.log("completeToDo: id: ", id)
             if(!this.currentProject || id==null)
                 return
@@ -178,10 +175,6 @@ const app = new Vue({
             location.reload();
             app.loggedIn=false
             app.user={name:'Anonymous',role:'Guest'}
-        },
-        submit: function(data,state){
-            if(state==='register')socket.emit('register', data)
-            if(state==='login')socket.emit('login',data)
         },
         updateSelectedUser: function() {
             socket.emit('update-selected-user', {id:app.selectedUserId, name:app.selectedUserName, email:app.selectedUserEmail, role:app.selectedUserRole})
@@ -221,7 +214,7 @@ const app = new Vue({
     }
 });
 
-// when user first opens up browser to obtain their projects.
+// when receiving project list from server, replace local copy
 socket.on('refresh-projects', projects => {
     app.projects = projects
 
@@ -231,7 +224,6 @@ socket.on('refresh-projects', projects => {
     if(index==-1) {
         console.log("Can't find current project in the current projectlist with index: " + index)
     } else {
-        // app.currentProject = app.projects[index]
         app.currentProject = app.projects.find(elem => elem._id == app.currentProject._id)
         console.log("app.js: refresh-projects (post): app.currentProject:", app.currentProject)
         console.log("app.js: refresh-projects (post): index:", index)
@@ -278,7 +270,3 @@ socket.on('refresh-users-list', users => {
         app.selectedUserNameAndEmailString = app.selectedUserName + ' | ' + app.selectedUserEmail
     }
 })
-
-
-//socket.on... when the server sends to the client
-//socket.emit when client sends to server

@@ -5,8 +5,6 @@ const User = require('../models/user.js');
 
 module.exports = (server, db) => {
     const io = require('socket.io')(server);
-    // const projects = [];
-    let counter = 0
 
     // when the page is loaded in the browser the connection event is fired
     io.on('connection', socket => {
@@ -18,8 +16,7 @@ module.exports = (server, db) => {
         socket.on('add-project', projectname => {
             //add the project to the list
             console.log("add project")
-            const project = new Project(counter++, projectname, '', [])
-            // projects.push(project)
+            const project = new Project(0, projectname, '', [])
             db.addProject(project).then(project => {
                 db.getAllProjects().then(projects => {
                     io.emit('refresh-projects', projects)
@@ -204,7 +201,6 @@ module.exports = (server, db) => {
                 .then(users => {
                     if (users == null) {
                         console.log("wtf no users?")
-                        // throw new Error('Null users list!')
                     } else {
                         console.log("Emitting refresh-users-list")
                         socket.emit('refresh-users-list', users)

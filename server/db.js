@@ -19,7 +19,6 @@ const UserSchema = new Mongoose.Schema({
 }, { strict: false })
 
 const ToDoSchema = new Mongoose.Schema({
-    //(id, description, completed, creator, users)
     id: Mongoose.Schema.Types.ObjectId,
     name: String, 
     description: String,
@@ -39,9 +38,9 @@ const
     Project = Mongoose.model('projects', ProjectSchema)
 
 
-const getAllProjects = () => Project.find()
+const getAllProjects = () => Project.find().sort('_id') // sorted by creation date 
 
-const getAllTodos = () => Todo.find()
+const getAllTodos = () => Todo.find().sort('_id') // (_id is based on timestamp)
 
 const addProject = (project) => {
     const content = {
@@ -108,9 +107,6 @@ const createUser=(data)=>{
             console.log("error")
             return Promise.reject(err)
         })
-    
-    // return User.create(content)
-    //User.create(content)
 }
 
 const loginUser=(user)=>{
@@ -158,82 +154,8 @@ const getUsersList = () => User.find({},'name email role')
 
 const updateUser = (id, changes) => {
     console.log("Changes obj: ", changes,"END CHANGESOBJ")
-    // return User.findByIdAndUpdate(id, {$set: {changes}}, {"fields": {"name":1, "email":1, "role":1, "new":true}})
     return User.findByIdAndUpdate(id, changes , { "new": true })
-
-    // return User.update({_id:id})
 }
-
-
-
-
-// const findUserByName = userName => User.findOne({ name: { $regex: `^${userName}$`, $options: 'i' } })
-
-
-
-// const createMessage = data => {
-//     const content = {
-//         user: data.user,
-//         message: data.message,
-//         date: new Date().getTime()
-//     }
-//     return Message.create(content)
-// }
-
-// const activeUsers = () => User.find({ socketId: { $ne: null } }, { password: 0 })
-
-// const allMessages = () => Message.find()
-
-
-// const loginUser = (userName, password, socketId) => {
-//     // find if the username is in the db
-//     return findUserByName(userName)
-//         .then(found => {
-//             if (!found)
-//                 throw new Error('User does not exists')
-
-//             // validate the password
-//             const valid = validatePassword(password, found.password)
-//             if (!valid)
-//                 throw new Error('Invalid Password')
-
-//             return found
-//         })
-//         // active == have socketId
-//         .then(({ _id }) => User.findOneAndUpdate({ _id }, { $set: { socketId } }))
-//         // return name and avatar
-//         .then(({ name, avatar }) => {
-//             return { name, avatar }
-//         })
-// }
-
-// const createUser = (userName, password, socketId) => {
-//     // find if username is in db
-//     return findUserByName(userName)
-//         .then(found => {
-//             if (found)
-//                 throw new Error('User already exists')
-
-//             return {
-//                 socketId,
-//                 name: userName,
-//                 password: generateHash(password),
-//                 avatar: `https://robohash.org/${userName}?set=set3`
-//             }
-//         })
-//         // create user
-//         .then(user => User.create(user))
-//         // return avatar and name
-//         .then(({ name, avatar }) => {
-//             return { name, avatar }
-//         })
-// }
-
-
-
-// const logoutUser = socketId => {
-//     return User.findOneAndUpdate({ socketId }, { $set: { socketId: null } })
-// }
 
 module.exports = {
     addProject,
@@ -247,10 +169,4 @@ module.exports = {
     loginUser,
     getUsersList,
     updateUser
-    // activeUsers,
-    // allMessages,
-    // createUser,
-    // createMessage,
-    // loginUser,
-    // logoutUser
 }
