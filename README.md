@@ -1,5 +1,3 @@
-## PROJECT DUE DATE - 05/13 - 11:59PM - CSNS
----
 ### Node Server Requirements
 
 **package.json** <br/>
@@ -35,9 +33,9 @@ The frontend should allow for user interaction - button clicks, input, forms, up
 
 ## To-Do
 
-Your To-Do application should allow Users to create a project, and within the project create To-Do’s
+To-Do application should allow Users to create a project, and within the project create To-Do’s
 
-Your UI must allow Users to do the following:
+UI must allow Users to do the following:
 
 - See a list of all projects
 - Navigate into a project and view all To-Do’s associated with the project.
@@ -45,6 +43,5 @@ Your UI must allow Users to do the following:
 - Toggle an existing To Do between done and not done.
 - Remove all completed To Do’s.
 
-### Extra Credit- Synchronization (10 pts)
+### Synchronization 
 - Whenever a project or To Do is created, modified, or deleted, the UI should be updated in real-time.
-- To receive credit - you must accomplish this with WebSockets.
